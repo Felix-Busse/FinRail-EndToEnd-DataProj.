@@ -84,16 +84,18 @@ class TrainLengthModel():
         self._index_fitted_on = self.data.index
         return self
     
-    def predict(self, steps=12, alpha=0.05):
-        '''Method returns DataFrame with three columns and Datetime Index. Containing training and 
-        prediction period values.
+    def predict_full_series(self, steps=12, alpha=0.05):
+        '''Method returns DataFrame with four columns. Containing training and 
+        prediction period values. Note: negative prediction values (for confidence intervals as well) 
+        would result in nan, because reverse Box-Cox-transform only works on non-negative values.
         
         Parameters:
         steps <int> number of month to predict in the future.
         alpha <float> number from 0 to 1 defining confidence level for confidence interval of prediction.
         
         Return:
-        <pandas DataFrame> DataFrame with DatetimeIndex and columns:
+        <pandas DataFrame> DataFrame with columns:
+            "departure_date": Month (end of month) to which the data refers.
             "length_m": Average length of all train compositions on specific day of the week in that month
                 in training time period and prediction time period
             "conf_int_lower" lower boundaries of confidence interval in prediction time period
@@ -105,9 +107,9 @@ class TrainLengthModel():
         )
         # Create new DatetimeIndex, which contains the period to which the model was fittet and
         # the period of predicted values
-        self._index_predicted_on = pd.date_range(self._index_fitted_on[-1], periods=steps, freq='M')
-        time_series_index = self._index_fitted_on.union(
-            self._index_predicted_on + self._index_fitted_on.freq)
+        self._index_predicted_on = pd.date_range(self._index_fitted_on[-1] + self._index_fitted_on.freq, 
+                                                 periods=steps, freq='M')
+        time_series_index = self._index_fitted_on.union(self._index_predicted_on)
         # Load values of period, the model was fitted to in a numpy array
         time_series = self.data.loc[self._index_fitted_on].length_m.values
         # Add the predicted values to this time series
@@ -116,18 +118,28 @@ class TrainLengthModel():
         df_ = pd.DataFrame(time_series, index=time_series_index, columns=['length_m'])
         # Create new columns containing confidence interval boundaries for prediction and zero
         # on training data
-        df_ = df_.assign(
+        # Fill nan with zero, as these occur due to negative inputs to box-cox-transformation, time series
+        # for total composition length is non-negative anyway.
+        df_ = (df_
+               .assign(
             conf_int_lower=pd.Series(data=np.concatenate(
                 (np.full(shape=len(self._index_fitted_on), fill_value=0), conf_intervals[:, 0])),
                 index=time_series_index),
             conf_int_upper=pd.Series(data=np.concatenate(
                 (np.full(shape=len(self._index_fitted_on), fill_value=0), conf_intervals[:, 1])),
                 index=time_series_index))
+               # Replace all nan with zero
+               .fillna(0)
+               # Reset index, as return should be .json-compatible
+               .reset_index(names='departure_date')
+              )
         return df_
     
     def predict_and_plot(self, steps=12, alpha=0.05):
-        '''Method calls .predict() method and plots resulting time series (training period +
-        prediction including confidence intervals.)
+        '''Method calls .predict_full_series() method and plots resulting time series (training period +
+        prediction including confidence intervals.). Note: negative prediction values (for confidence 
+        intervals as well) would result in nan, because reverse Box-Cox-transform only works on 
+        non-negative values.
         
         Parameters:
         steps <int> number of month to predict in the future.
@@ -137,7 +149,9 @@ class TrainLengthModel():
         self: TrainLengthModel object
         '''
         # Call predict method to obtain DataFrame with time series and confidence intervals
-        df_ = self.predict(steps=steps, alpha=alpha)
+        df_ = self.predict_full_series(steps=steps, alpha=alpha)
+        # Set DateTimeIndex
+        df_ = df_.set_index('departure_date')
         # Set seaborn to default theme
         sns.set_theme()
         # Plot time series including prediction as a line plot
@@ -159,6 +173,43 @@ class TrainLengthModel():
             bbox_to_anchor=(1.02, 0.55), loc='upper left', 
             facecolor='white', edgecolor='white')
         return self
+    
+    def predict(self, steps=12, alpha=0.05):
+        '''Method returns DataFrame with four columns and. Containing  prediction period values. 
+        Note: negative prediction values (for confidence intervals as well) 
+        would result in nan, because reverse Box-Cox-transform only works on non-negative values.
+        
+        Parameters:
+        steps <int> number of month to predict in the future.
+        alpha <float> number from 0 to 1 defining confidence level for confidence interval of prediction.
+        
+        Return:
+        <pandas DataFrame> DataFrame with columns:
+            "departure_date": Month (end of month) to which the data refers.
+            "length_m": Average length of all train compositions on specific day of the week in that month
+                in training time period and prediction time period
+            "conf_int_lower" lower boundaries of confidence interval in prediction time period
+            "conf_ing_upper" upper oundaries of confidence interval in prediction time period
+        '''
+        # make prediction and store predicted values and confidence interval boundaries
+        time_series_prediction, conf_intervals = self._model.predict(steps, return_conf_int=True, 
+                                                                     alpha=alpha)
+        # Create new DatetimeIndex, which contains the period to which the model was fittet and
+        # the period of predicted values
+        self._index_predicted_on = pd.date_range(self._index_fitted_on[-1] + self._index_fitted_on.freq, 
+                                                 periods=steps, freq='M')
+        # Create DataFrame with DatetimeIndex and predicted values, as well as confidence intervals 
+        df_ = pd.DataFrame(data=time_series_prediction, index=self._index_predicted_on, 
+                           columns=['length_m'])
+        df_ = (df_
+               .assign(conf_int_lower=pd.Series(conf_intervals[:, 0], index=self._index_predicted_on), 
+                       conf_int_upper=pd.Series(conf_intervals[:, 1], index=self._index_predicted_on))
+               # Replace all nan with zero
+               .fillna(0)
+               # Reset index, as return should be .json-compatible
+               .reset_index(names='departure_date')
+              )
+        return df_
     
     def update(self):
         '''Method will update model to time steps in data, that havn't been used for fitting/updating jet.
