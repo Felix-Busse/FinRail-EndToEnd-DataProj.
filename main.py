@@ -17,13 +17,6 @@ from train_compositions import TrainLengthModel
 # Initiate instance of FastAPI application
 app = FastAPI()
 
-# Define subdirectory of trained models and load models from there
-models_file_name = 'trained_time_series.pkl'
-models_path = os.path.join(os.getcwd(), 'models', models_file_name)
-models = joblib.load(models_path)
-
-@app.post
-
 @app.get('/API/prediction')
 async def predict_all(steps: int = 12, alpha: float=0.05):
     '''Function returns predictions for all combinations of "train_category" and "day_of_week" available.
@@ -31,7 +24,12 @@ async def predict_all(steps: int = 12, alpha: float=0.05):
     Parameters:
     steps <int> (optional): length of prediction period (months). Default = 12
     alpha <float> (optional): confidence level of predictions. Default = 0.05
-    '''
+    '''    
+    # Define subdirectory of trained models and load models from there
+    models_file_name = 'trained_time_series.pkl'
+    models_path = os.path.join(os.getcwd(), 'models', models_file_name)
+    models = joblib.load(models_path)
+    
     # Create empty dictionary, than iterate over all models available and add model's attributes to dictionary
     result_dict = {} 
     for i, model in enumerate(models):
@@ -54,6 +52,11 @@ async def predict(day_of_week: str, train_category: str,
     steps <int> (optional): length of prediction period (months). Default = 12
     alpha <float> (optional): confidence level of predictions. Default = 0.05
     '''
+    # Define subdirectory of trained models and load models from there
+    models_file_name = 'trained_time_series.pkl'
+    models_path = os.path.join(os.getcwd(), 'models', models_file_name)
+    models = joblib.load(models_path)
+    
     # Loop through all models untill model with matching attributes found; return defining attributes and prediction
     for i, model in enumerate(models):
         if((model.train_category == train_category) and 
@@ -76,6 +79,11 @@ async def predict_full_series(day_of_week: str, train_category: str,
     steps <int> (optional): length of prediction period (months). Default = 12
     alpha <float> (optional): confidence level of predictions. Default = 0.05
     '''
+    # Define subdirectory of trained models and load models from there
+    models_file_name = 'trained_time_series.pkl'
+    models_path = os.path.join(os.getcwd(), 'models', models_file_name)
+    models = joblib.load(models_path)    
+    
     # Loop through all models untill model with matching attributes found; return defining attributes and full time 
     # series
     for i, model in enumerate(models):
@@ -104,6 +112,11 @@ async def predict_and_plot(day_of_week: str, train_category: str,
     Returns:
     <json> with "plot_successful" as bool
     '''
+    # Define subdirectory of trained models and load models from there
+    models_file_name = 'trained_time_series.pkl'
+    models_path = os.path.join(os.getcwd(), 'models', models_file_name)
+    models = joblib.load(models_path)
+    
     # Initiate variable to measure, whether plot was executed
     success = False
     # Define path and file name to store plot figure

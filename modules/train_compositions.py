@@ -27,7 +27,6 @@ class TrainLengthModel():
             ('ARIMA', AutoARIMA(m=12, information_criterion='aicc', trace=None))
         ])
         # initialize empty attributes for internal use only
-        self._median = 0
         self._index_fitted_on = pd.DatetimeIndex([])
         self._index_predicted_on = pd.DatetimeIndex([])
     
@@ -75,9 +74,6 @@ class TrainLengthModel():
         imputer = SimpleImputer(strategy='median')
         # result of impute-process will be time series to which the model is fittet to
         time_series = imputer.fit_transform(self.data).flatten()
-        # store median, as it will be used when updating the model (updating only with parameters obtained
-        # during model training)
-        self._median = imputer.statistics_[0]
         # fit model to time series
         self._model.fit(y=time_series)
         # store DatetimeIndex, as it is needed to locate predictions later
