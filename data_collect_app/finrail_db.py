@@ -103,7 +103,7 @@ class Locomotive(Base):
     # Define relationship to be able to add instances of Locomotive to instances of Journey_Section
     journey = relationship('Journey_Section', backref=backref('locomotive'))
 
-def create_tables(db_str='mysql+mysqlconnector://root:admin123@0.0.0.0:5000/finrail'):
+def create_tables(db_str='mysql+mysqlconnector://root:admin123@my_sql_db/finrail'):
     '''Function returns engine to database specified in db_str and creates all tables form classes, 
     which inherited from "Base".
     

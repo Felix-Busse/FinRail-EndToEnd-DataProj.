@@ -5,4 +5,6 @@ COPY ./crontab ./finrail_db.py ./main.py ./requirements.txt /app/cron/
 RUN pip install -r /app/cron/requirements.txt
 RUN crontab /app/cron/crontab
 
+EXPOSE 5001
+
 CMD ["crond", "-f"]

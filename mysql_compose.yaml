@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  my_sql_db:
+    image: mysql:8.0
+    ports:
+      - 5000:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${db_psw}
+    volumes:
+      - my_sql_data:/var/lib/mysql
+
+  data_collect_app:
+    build: ./data_collect_app/
+    ports:
+      - 5001:5001
+
+volumes:
+  my_sql_data:
+    driver: local

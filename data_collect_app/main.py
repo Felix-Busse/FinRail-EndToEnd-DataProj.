@@ -1,3 +1,4 @@
+import datetime as dt
 import finrail_db
 import os
 from sqlalchemy import create_engine
@@ -9,6 +10,7 @@ import sys
 #if modules_path not in sys.path:
 #    sys.path.append(modules_path)
 engine = finrail_db.create_tables()
-ession = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine)
 session = Session()
 
+finrail_db.add_compositions(s=session, date_end=dt.date.today())
