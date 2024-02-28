@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # MySQL Server
+  my_sql_db:
+    image: mysql:8.0
+    ports:
+      - 5000:3306
+    environment:
+      # standard environment variable to set when creating mysql database
+      MYSQL_ROOT_PASSWORD: ${COMPOSE_DB_PSW_ROOT}
+      MYSQL_DATABASE: ${COMPOSE_DB_NAME}
+      MYSQL_USER: ${COMPOSE_DB_USER}
+      MYSQL_PASSWORD: ${COMPOSE_DB_PSW}
+    volumes:
+      # Use a named volume to provide persistent memory
+      - my_sql_data:/var/lib/mysql
+
+  data_collect_app:
+    # Build and run data_collect_app (cron job to update data in data base)
+    build: ./data_collect_app/
+    ports:
+      - 5001:5001
+    environment:
+      # Pass information necessary for data base connection
+      DB_PSW: ${COMPOSE_DB_PSW}
+      DB_USER: ${COMPOSE_DB_USER}
+      DB_NAME: ${COMPOSE_DB_NAME}
+      DB_SERVER: my_sql_db
+    depends_on:
+      # This service depends on data base service
+      - my_sql_db
+
+volumes:
+  my_sql_data:
+    # Assign named volume to local hard disc
+    driver: local
