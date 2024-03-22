@@ -1,8 +1,8 @@
 import datetime as dt
 import re
 import requests
-from sqlalchemy import (create_engine, Column, Integer, VARCHAR, DATE, DATETIME, ForeignKey, Boolean,
-select, func)
+from sqlalchemy import (create_engine, Column, Integer, VARCHAR, DATE, DATETIME, ForeignKey, Boolean, 
+                        select, func)
 from sqlalchemy.orm import declarative_base, relationship, backref
 
 # Create base class for sqlalchemy class decleration
@@ -217,7 +217,8 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
     information, it will fill up the database with the data from the rata.digitraffic.fi
     API for train compositions up to date_end (exclusive).
     
-    Inputs: s: sqlalchemy session instance
+    Parameters: 
+        s: sqlalchemy session instance
         date_end: datetime.date object (defaults to datetime.date.today())
         verbose: set to > 0 to obtain statis information while procession data
     '''
@@ -225,7 +226,8 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
     try:
         latest_date = s.query(func.max(Train.dep_date)).scalar()
     except:
-        print('finrail database is not accessible. In "Query date"')
+        print('Table "train" in finrail database is not accessible, in "Query date". Set \
+            date to default')
         latest_date = dt.date(2015, 12, 11) # default value for latest_date, if database not accessible
     if latest_date == None:
         latest_date = dt.date(2015, 12, 11) # default value for latest_date, if database is empty
