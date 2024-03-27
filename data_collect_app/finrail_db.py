@@ -287,7 +287,7 @@ def tweak_train(df_):
     .max().unstack()
     .reset_index() # to have dates in own column
     .set_axis(['date', 'commuter', 'long_distance'], axis=1) # set column names, flatten nested column index
-    .interpolate(method='pad') # overwrite nan with value of day before
+    .ffill(axis=0) # overwrite nan with value of day before
     )
 
 def update_timeseries(s, engine):
@@ -340,8 +340,9 @@ def update_timeseries(s, engine):
     # Loop over pandas series stored in dictionary
     for i, date in enumerate(timeseries_dict['date']):
         # Create class object "Timeseries()" and collect them in list
-        timestep = Timeseries(date=date, commuter=timeseries_dict['commuter'].iloc[i], 
-                   long_distance=timeseries_dict['long_distance'].iloc[i])
+        timestep = Timeseries(date=date.to_pydatetime(), 
+                              commuter=float(timeseries_dict['commuter'].iloc[i]), 
+                              long_distance=float(timeseries_dict['long_distance'].iloc[i]))
         new_timesteps.append(timestep)
 
     # Add and commit new entries to database
