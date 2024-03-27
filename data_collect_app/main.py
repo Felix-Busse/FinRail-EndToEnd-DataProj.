@@ -20,3 +20,5 @@ session = Session()
 
 # Pass session to update data base with missing data, use today as end date
 finrail_db.add_compositions(s=session, date_end=dt.date.today())
+# Update table "timeseries" using data stored in data base
+finrail_db.update_timeseries(s=session, engine=engine)

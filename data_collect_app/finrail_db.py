@@ -1,8 +1,9 @@
 import datetime as dt
+import pandas as pd
 import re
 import requests
 from sqlalchemy import (create_engine, Column, Integer, VARCHAR, DATE, DATETIME, ForeignKey, Boolean, 
-                        select, func)
+                        select, func, FLOAT, text)
 from sqlalchemy.orm import declarative_base, relationship, backref
 
 # Create base class for sqlalchemy class decleration
@@ -103,6 +104,19 @@ class Locomotive(Base):
     # Define relationship to be able to add instances of Locomotive to instances of Journey_Section
     journey = relationship('Journey_Section', backref=backref('locomotive'))
 
+
+class Timeseries(Base):
+    '''Defines class object for table "timeseries". This table will hold aggregated data, that holds
+    timeseries of total wagon length in its columns.'''
+    
+    __tablename__ = 'timeseries' 
+    
+    uid = Column('id', Integer, autoincrement=True, primary_key=True) # integer primary key with autoincr.
+    date = Column('date', DATE) # Column holding the information about the date (daily timeseries)
+    commuter = Column('commuter', FLOAT) # Column holding total length of commuter trains
+    long_distance = Column('long_distance', FLOAT) # Column holding total length of commuter trains
+
+
 def create_tables(db_str='mysql+mysqlconnector://root:admin123@my_sql_db/finrail'):
     '''Function returns engine to database specified in db_str and creates all tables form classes, 
     which inherited from "Base".
@@ -121,7 +135,7 @@ def date_convert(date):
 
 def trains_json_to_train_list(compositions_day):
     '''Function takes answer of API as specified on rata-digitraffic.fi for train compositions
-    of whole days. 
+    of whole days. This is a json format data object.
     
     Returns list of Trains (sqlalchemy class object), ready to be send to finrail_db database.'''
     trains_of_day = []
@@ -239,6 +253,7 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
         r = requests.get('https://rata.digitraffic.fi/api/v1/compositions/' + str(date))
         if r.status_code != 200: # Handle errors from requesting API
             print('API on rata.digitraffic.fi/api/v1/compositions/ is not accessible')
+            return None
         else:
             try:
                 # Extract data from answer of API and store in database
@@ -247,6 +262,89 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
             except:
                 # Handle errors that occured from accessing database
                 print('finrail database is not accessible. In "Adding data"')
+                return None
         if verbose > 0:
             # Print date of data just processed, if desired
             print('Added data of date: ' + str(date))
+    return None
+
+def tweak_train(df_):
+    '''Function takes DataFrame as returned from SQL-query and returns processed DataFrame
+    Transformations:
+        - DataType: update to all columns
+        - Introducing columns "commuter" and "long_distance" by grouping by date and train category
+          and then unstacking ones
+        - pushing the date information from index to own column
+        - Renaming and setting back nested column names
+        
+    '''
+    return (df_
+    .astype({
+        'date': 'datetime64[ns]',
+        'train_cat': 'category', # set as category because of low cardenality
+    })
+    .groupby(['date', 'train_cat']) # grouping twice, so "train_cat" can be unstacked later
+    .max().unstack()
+    .reset_index() # to have dates in own column
+    .set_axis(['date', 'commuter', 'long_distance'], axis=1) # set column names, flatten nested column index
+    .interpolate(method='pad') # overwrite nan with value of day before
+    )
+
+def update_timeseries(s, engine):
+    '''Function will read information from tables "train", "journey_section" and "wagon" in database
+    and will aggregate it to obtain timeseries. These timeseries will be stored in table "timeseries"
+    in database.
+
+    Parameters:
+        s: sqlalchemy session instance
+        engine: sqlalchemy engine object
+
+    Return: None
+    '''
+    # Query for sql database is stored in file. Read it
+    with open('sql_query.txt', 'r') as w:
+        sql_query_str = w.read()
+    
+    # Open SQL connection and send query and store as pandas dataframe. This query will:
+    # 1. Sum length of all wagon in a journey section
+    # 2. Choose maximum length of all wagons among journey sections for each train
+    # 3. Sum length of wagons for all trains per day, grouped by train category (Commuter, Long-distance)
+    with engine.connect() as connection:
+        df = pd.read_sql_query(text(sql_query_str), connection)
+    
+    # Call "tweak_train()" function to obtain timeseries from result of query
+    df = tweak_train(df)
+
+    # Create table in database, if not exists
+    try:
+        Base.metadata.tables['timeseries'].create(engine, checkfirst=True)
+    except: 
+        print('Error on accessing database on creation of table "timeseries".')
+        return None
+    
+    # Read out latest time stored in database table "timeseries"
+    try:
+        latest_db_date = s.query(func.max(Timeseries.date)).scalar()
+        # If reading is impossible set date to default
+        if latest_db_date == None:
+            latest_db_date = dt.date(1900, 1, 1)
+    except:
+        print('Error while quering table "timeseries"')
+        return None
+    
+    # Take part of timeseries not stored in database and convert to dictionary
+    timeseries_dict = dict(df[df.date > pd.to_datetime(latest_db_date)])
+    
+    # list to collect new time series steps in
+    new_timesteps = []
+    # Loop over pandas series stored in dictionary
+    for i, date in enumerate(timeseries_dict['date']):
+        # Create class object "Timeseries()" and collect them in list
+        timestep = Timeseries(date=date, commuter=timeseries_dict['commuter'].iloc[i], 
+                   long_distance=timeseries_dict['long_distance'].iloc[i])
+        new_timesteps.append(timestep)
+
+    # Add and commit new entries to database
+    s.add_all(new_timesteps)
+    s.commit()
+    return None
