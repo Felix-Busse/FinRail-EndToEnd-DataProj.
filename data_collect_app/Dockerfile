@@ -2,7 +2,7 @@
 FROM python:3.10.12-alpine
 
 # Copy necessary files from project directory to /app/cron/ in image
-COPY ./crontab ./finrail_db.py ./main.py ./sql_query.txt ./timeseries_query.txt ./requirements.txt /app/cron/
+COPY ./crontab ./finrail_db.py ./main.py ./sql_query.txt ./requirements.txt /app/cron/
 
 # Install necessary python packages from requirements.txt file
 RUN pip install -r /app/cron/requirements.txt
@@ -14,6 +14,8 @@ ENV DB_PSW default_psw
 ENV DB_USER default_user
 ENV DB_NAME default_name
 ENV DB_SERVER default_server
+# Define environment variable containing the file path of the app
+ENV APP_PATH /app/cron/
 
 # Define port
 EXPOSE 5001

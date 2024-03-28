@@ -1,4 +1,5 @@
 import datetime as dt
+import os
 import pandas as pd
 import re
 import requests
@@ -283,26 +284,29 @@ def tweak_train(df_):
         'date': 'datetime64[ns]',
         'train_cat': 'category', # set as category because of low cardenality
     })
-    .groupby(['date', 'train_cat']) # grouping twice, so "train_cat" can be unstacked later
+    # grouping twice, so "train_cat" can be unstacked later
+    .groupby(['date', 'train_cat'], observed=False) 
     .max().unstack()
     .reset_index() # to have dates in own column
     .set_axis(['date', 'commuter', 'long_distance'], axis=1) # set column names, flatten nested column index
     .ffill(axis=0) # overwrite nan with value of day before
     )
 
-def update_timeseries(s, engine):
+def update_timeseries(s, engine, path_query):
     '''Function will read information from tables "train", "journey_section" and "wagon" in database
     and will aggregate it to obtain timeseries. These timeseries will be stored in table "timeseries"
     in database.
 
     Parameters:
-        s: sqlalchemy session instance
-        engine: sqlalchemy engine object
+        s <sqlalchemy session instance> Session to database to read/write from
+        engine <sqlalchemy engine object> Engine of database to read/write from
+        path_query <path object> Path to the file containing the text of the sql query
 
     Return: None
     '''
     # Query for sql database is stored in file. Read it
-    with open('sql_query.txt', 'r') as w:
+    #sql_query_dir = os.path.join(os.getcwd(), '/app/cron/sql_query.txt')
+    with open(path_query, 'r') as w:
         sql_query_str = w.read()
     
     # Open SQL connection and send query and store as pandas dataframe. This query will:
