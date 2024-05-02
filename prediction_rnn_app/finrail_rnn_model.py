@@ -108,7 +108,7 @@ def prepare_training_dataset(df_, column, row_split, forecast_length=14, seq_len
     Return:
         <tf.data.Dataset> ready to feed to .fit() of an sequence to sequence RNN
     '''
-    data = tf.data.Dataset.from_tensor_slices(df[column][row_split[0]:row_split[1]].values)
+    data = tf.data.Dataset.from_tensor_slices(df_[column][row_split[0]:row_split[1]].values)
     data = timeseries_dataset_seq2seq(data, forecast_length, seq_length)
     data = data.cache() # cache, so that previous transformation are only performed ones
     data = data.shuffle(500, seed=seed, reshuffle_each_iteration=reshuffle_each_iteration)

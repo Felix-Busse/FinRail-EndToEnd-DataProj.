@@ -19,10 +19,30 @@ services:
   data_collect_app:
     # Build and run data_collect_app (cron job to update data in data base)
     build: ./data_collect_app/
+    # Define port mapping
     ports:
       - 5001:5001
     environment:
       # Pass information necessary for data base connection
+      DB_PSW: ${COMPOSE_DB_PSW}
+      DB_USER: ${COMPOSE_DB_USER}
+      DB_NAME: ${COMPOSE_DB_NAME}
+      DB_SERVER: my_sql_db
+    depends_on:
+      # This service depends on data base service
+      - my_sql_db
+
+  prediction_rnn_app:
+    # Build and run prediction_app
+    build: 
+      context: ./prediction_rnn_app/ 
+      args:
+        ARG_PORT_NO: 5002
+    # Define port mapping
+    ports: 
+      - 5002:5002
+    environment:
+      # Pass environment variables for data base connection
       DB_PSW: ${COMPOSE_DB_PSW}
       DB_USER: ${COMPOSE_DB_USER}
       DB_NAME: ${COMPOSE_DB_NAME}

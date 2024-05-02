@@ -14,6 +14,7 @@ ENV DB_PSW default_psw
 ENV DB_USER default_user
 ENV DB_NAME default_name
 ENV DB_SERVER default_server
+
 # Define environment variable containing the file path of the app
 ENV APP_PATH /app/cron/
 
