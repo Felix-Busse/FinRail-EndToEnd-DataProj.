@@ -2,9 +2,13 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 from sqlalchemy import text
-import tensorflow as tf
+#import tensorflow as tf
+from tensorflow import cast, reduce_sum, size, float32
+from tensorflow.data import AUTOTUNE, Dataset
+from tensorflow.keras.metrics import Metric
+from tensorflow.math import square, sqrt
 
-class Custom_Metric(tf.keras.metrics.Metric):
+class Custom_Metric(Metric):
     '''Metric calculating the root mean squared error (RMSE) for a sequence to sequence recurrent
     neuronal network (RNN) exclusively based on the last predicted vector of a sequence. 
     This is useful in situation, where a sequence to sequence RNN is trained, but for production 
@@ -31,25 +35,25 @@ class Custom_Metric(tf.keras.metrics.Metric):
         if self.time_series_index == None:
             # True, if class is in use for forecasting single time series
             # sum up how many data point in batch will be summed            
-            self.sample_count.assign_add(tf.cast(tf.size(y_pred[:, -1, :]), tf.float32))
+            self.sample_count.assign_add(cast(size(y_pred[:, -1, :]), float32))
             # sum of squares of difference of y_true and y_pred on last sequence
-            self.sum_of_squares.assign_add(tf.reduce_sum(
-                tf.math.square(y_pred[:, -1, :] - y_true[:, -1, :]))
+            self.sum_of_squares.assign_add(reduce_sum(
+                square(y_pred[:, -1, :] - y_true[:, -1, :]))
             )
         else:
             # If class is in use for multivariate forecasting, calculate for selected time series only
             # sum up how many data point in batch will be summed
-            self.sample_count.assign_add(tf.cast(
-                tf.size(y_pred[:, -1, :, self.time_series_index]), tf.float32)
+            self.sample_count.assign_add(cast(
+                size(y_pred[:, -1, :, self.time_series_index]), float32)
             )
             # sum of squares of difference of y_true and y_pred on last sequence
-            self.sum_of_squares.assign_add(tf.reduce_sum(tf.math.square(
+            self.sum_of_squares.assign_add(reduce_sum(square(
                 y_true[:, -1, :, self.time_series_index] - y_pred[:, -1, :, self.time_series_index]
             )))
     
     def result(self):
         '''Function will calculate the RMSE at the end of every epoch'''
-        return tf.math.sqrt(self.sum_of_squares / self.sample_count)
+        return sqrt(self.sum_of_squares / self.sample_count)
                                     
     def reset_state(self):
         '''Function will reset all stateful variables to zero'''
@@ -90,7 +94,7 @@ def timeseries_dataset_seq2seq(data, forecast_length=1, seq_length=7):
     data = timeseries_window(data, seq_length) # Second dimension consists of windows of size sequence length
     # map to tuple (training instance, target)
     return data.map(lambda x: (x[:, 0, :], x[:, 1:, 0]), 
-                    num_parallel_calls=tf.data.AUTOTUNE)
+                    num_parallel_calls=AUTOTUNE)
 
 def prepare_training_dataset(df_, column, row_split, forecast_length=14, seq_length=30, 
                              batch_size=32, seed=42, reshuffle_each_iteration=True):
@@ -108,11 +112,11 @@ def prepare_training_dataset(df_, column, row_split, forecast_length=14, seq_len
     Return:
         <tf.data.Dataset> ready to feed to .fit() of an sequence to sequence RNN
     '''
-    data = tf.data.Dataset.from_tensor_slices(df_[column][row_split[0]:row_split[1]].values)
+    data = Dataset.from_tensor_slices(df_[column][row_split[0]:row_split[1]].values)
     data = timeseries_dataset_seq2seq(data, forecast_length, seq_length)
     data = data.cache() # cache, so that previous transformation are only performed ones
     data = data.shuffle(500, seed=seed, reshuffle_each_iteration=reshuffle_each_iteration)
-    return data.batch(batch_size=batch_size).prefetch(tf.data.AUTOTUNE)
+    return data.batch(batch_size=batch_size).prefetch(AUTOTUNE)
 
 def read_timeseries_from_database(engine, str_query):
     '''Function reads from database engine and returns a pandas Dataframe containing data.
@@ -130,14 +134,19 @@ def read_timeseries_from_database(engine, str_query):
 def tweak_timeseries(df_):
     '''Function updates DateFrame returned from SQL-query and adds one-hot-encoded information
     about whether next day in series will be a day Mo-Fr, Saturday or Sunday
+    Parameters:
+        df_ <pd.DataFrame> DataFrame as in data base table "timeseries" in database "finrail" 
+    Returns:
+        <pd.DataFrame> DataFrame holding additionally one-hot-encoded information about next day
+            type (3 columns: Mo-Fr, Saturday, Sunday)
     '''
-    df_ = (df_.astype({'date': 'datetime64[ns]', # data types updates
-                       'commuter': 'float32',  # use float32, as it is default to tensorflow
+    df_ = (df_.astype({'commuter': 'float32',  # use float32, as it is default to tensorflow
                        'long_distance': 'float32'
                       })
-           .assign(commuter=lambda df: df.commuter / 1E5) # scale data
-           .assign(long_distance=lambda df: df.long_distance / 1E5) # scale data
-           .assign(next_day=lambda df_: df_.date.shift(-1)) # create information about date of next day
+            .assign(date=lambda s: s.date.astype('datetime64[ns]'))
+            .assign(commuter=lambda s: s.commuter / 1E5) # scale data
+            .assign(long_distance=lambda s: s.long_distance / 1E5) # scale data
+            .assign(next_day=lambda s: s.date.shift(-1)) # create information about date of next day
     )
     df_.iat[-1, -1] = (df_.date.iloc[-1]+dt.timedelta(days=1)) # Fill missing value, created by shift
     # Translate date of next day to information whether next day is Mo-Fr ('W'), Sa ('S') or Sunday('H')
@@ -148,3 +157,22 @@ def tweak_timeseries(df_):
     )
     # Return DataFrame with one-hot-encoded information about next day
     return pd.get_dummies(df_, columns=['next_day'], dtype='float32')
+
+def simple_sequence_pred(model, df_):
+    '''Function will predict based on the last 21 time stamps in df_. Prediction will be based
+    on sequence forecasting (in contrast to one-step-ahead forecasting).
+    Parameters:
+        model <tf.keras.model> model suitable to predict on columns 1 to 4 of df.
+        df_ <pd.DataFrame> DataFrame with datetime data in column 0 and data suitable for model 
+            to predict on in columns 1 to 4
+    Returns:
+        <list, np.ndarray(dim=1)> list is holding date information about prediction horizon,
+            np.ndarray is holding predicted values.
+    '''
+    # Idea: assert statement about df_ has more than 21 entries
+    # predict on data in DataFrame, keep last sequence (the sequence lying completly in predicted
+    # future) and multiply with 1E5 to obtain values with proper scale.
+    prediction = model.predict(df_.iloc[-21:, 1:].to_numpy()[np.newaxis, :, :])[0, -1, :] * 1E5
+    # Construct list of date information of prediction horizon
+    dates = [(df_.iloc[-1, 0] + dt.timedelta(days=i)).date() for i in range(1, len(prediction) + 1)]
+    return dates, prediction

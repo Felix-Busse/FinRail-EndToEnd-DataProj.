@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 import finrail_rnn_model
+import numpy as np
 import os
 from sqlalchemy import create_engine
 import sys
-import tensorflow as tf
+from tensorflow.keras import models
 
 # Add finrail_rnn_model module to access rnn models for predictions
 modules_path = os.path.join(os.getcwd(), 'data_collect_app')
@@ -29,7 +30,7 @@ async def prediction():
     '''
     # Load trained model for this purpose
     path_model = os.path.join(os.getcwd(), 'app/finrail_api/rnn_commuter.keras')
-    tf.keras.models.load_model(path_model, 
+    model = models.load_model(path_model, 
         custom_objects={'Custom_Metric': finrail_rnn_model.Custom_Metric})
     # Load sql query to load time series up to newest date available
     path_sql_query = os.path.join(os.getcwd(), 'app/finrail_api/timeseries_query.txt')
@@ -37,4 +38,10 @@ async def prediction():
         sql_query = f.read()
     # Load time series from database
     df = finrail_rnn_model.read_timeseries_from_database(engine=engine, str_query=sql_query)
-    return df
+    # Use tweak-function to process DataFrame and add one-hot-encodings, keep only last 21 days.
+    df = finrail_rnn_model.tweak_timeseries(df).iloc[-21:, :]
+    # Predict next 14 days of time series
+    prediction = model.predict(df[['commuter', 'next_day_H', 'next_day_S', 'next_day_W']]
+        .to_numpy()[np.newaxis, :, :])
+
+    return pd.DataFrame(prediction[0, -1, :])
