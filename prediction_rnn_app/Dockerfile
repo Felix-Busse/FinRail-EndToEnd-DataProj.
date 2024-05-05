@@ -1,5 +1,6 @@
 # Use image of python to run python scripts
-FROM python:3.10.14-bookworm
+#FROM python:3.10.14-bookworm
+FROM tensorflow/tensorflow:2.14.0
 
 # copy necessary files from development folder to image
 COPY main.py finrail_rnn_model.py timeseries_query.txt rnn_commuter.keras rnn_long_distance.keras requirements.txt /app/finrail_api/

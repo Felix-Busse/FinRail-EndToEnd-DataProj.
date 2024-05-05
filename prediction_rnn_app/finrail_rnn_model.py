@@ -2,8 +2,7 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 from sqlalchemy import text
-#import tensorflow as tf
-from tensorflow import cast, reduce_sum, size, float32
+from tensorflow import cast, reduce_sum, size, float32, transpose, concat, expand_dims, TensorSpec
 from tensorflow.data import AUTOTUNE, Dataset
 from tensorflow.keras.metrics import Metric
 from tensorflow.math import square, sqrt
@@ -176,3 +175,141 @@ def simple_sequence_pred(model, df_):
     # Construct list of date information of prediction horizon
     dates = [(df_.iloc[-1, 0] + dt.timedelta(days=i)).date() for i in range(1, len(prediction) + 1)]
     return dates, prediction
+
+def calc_residuals(model, data_test):
+    '''Function calculates the residual errors of predictions made by the model. Errors
+    are calculated for every time step in forecast horizon seperately.
+    
+    Parameters:
+        model <tf.keras.model> Model used for predictions
+        data_test <tf.data.Dataset> Dataset containing data and targets, to be used in model.predict()
+    
+    Returns:
+        <tf.data.Dataset> Dataset containing residual errors for every time step in forecast horizon.
+    '''
+    # Predict on test dataset and batch result
+    prediction = model.predict(data_test, verbose=0)
+    prediction = Dataset.from_tensor_slices(prediction).batch(500)
+    # Add test dataset to prediction, so target information is contained in dataset
+    prediction = Dataset.zip(prediction, data_test)
+    
+    # Definition of generator function on prediction dataset, calculating the difference between
+    # prediction and target
+    def difference_gen():
+        '''Generator calculates difference between prediction and target of "prediction" dataset
+        '''
+        for pred, (_, timeseries_target) in prediction:
+            # use of last predicted sequence exclusivly, as this sequence heads into the future
+            yield pred[:, -1, :] - timeseries_target[:, -1, :] 
+
+    # return differences in a dataset
+    return Dataset.from_generator(difference_gen, 
+        output_signature=(TensorSpec(shape=(None, 14), dtype=float32)))
+
+def predict_with_errors(model, data_test, df_, bootstrap_size=10, alpha=0.95):
+    '''Function will return prediction for next 14 days for time series including confidence intervals.
+    
+    Parameter:
+    model <tf.keras.model> Model used for predictions
+    data_test <tf.data.Dataset> Dataset containing data and targets, to be used in model.predict()
+    df_ <pd.DataFrame> DataFrame containing two columns: 1. 'date' with datetime information and
+        2. time series data information
+    alpha <float> Size of confidence interval of returned time series
+    
+    Return:
+    <pd.DataFrame> Time series prediction for 14 days, including confidence intervals
+    '''
+    # Calculate residuals from test data period, in order to use these residuals for bootstrapping
+    # Keep only one step ahead errors.
+    residuals = calc_residuals(model, data_test)
+    residuals = residuals.map(lambda x: x[:, 0])
+    residuals = residuals.unbatch()
+    residuals = np.array(list(residuals.as_numpy_iterator()))
+    
+    # Bootstrapping for multistep ahead prediction of non parametric model is still discussed 
+    # in science, see:
+    # Politis, D.N.; Wu, K.
+    # Multi-Step-Ahead Prediction Intervals for Nonparametric Autoregressions via Bootstrap:
+    # Consistency, Debiasing, and Pertinence. Stats 2023, 6, 839–867. https://doi.org/10.3390/stats6030053
+
+    # For simplicity intervals here intervals are bootstrapped from one step ahead predictions.
+    # Algorithm:
+    # 1. Forecast one step ahead and randomly add a residual from all one step ahead residuals to the value
+    # 2. Predict with updated series another one step ahead and repeat until forecast horizon ist reached
+    # 3. After many repetitions, select confidence boundaries from obtained predicted time series
+    
+    # Predict time series iteratively with one step ahead predictions
+    # Calculate bootstrapped confidence intervals as well
+    
+    # 1. Restrict time series to 21 latest values, as only these will be used for prediction
+    df_ = df_.iloc[-21:].reset_index(drop=True)
+    
+    # 2. Add columns for error calculation 
+    # These added columns are copies of the column holding the time series. Later these columns
+    # will contain the predictions with bootstrapped errors in prediction horizon
+    # First of these columns will hold one-step-ahead predictions 
+    column_dict = {'one_step_ahead': df_.iloc[:, 1]}
+    column_dict = column_dict | {'error_col_' + str(i): df_.iloc[:, 1] for i in range(bootstrap_size)}
+    df_ = pd.concat([df_, pd.concat(column_dict, axis=1)], axis=1)
+    
+    # 3. Create a dataset out of the DataFrame, that can be passed to model.predict()
+    # Use transposed of the time series columns of DataFrame to slice the Dataset along columns
+    dataset = Dataset.from_tensor_slices(df_.iloc[-21:, 5:].to_numpy().T)
+    # Take columns 
+    daytypes = df_.iloc[-21:, 2:5].to_numpy().T
+    dataset = dataset.map(lambda x: concat([expand_dims(x, axis=0), daytypes], axis=0))
+    dataset = dataset.map(lambda x: transpose(x))
+    # Batch (Prefetching is not applied, as only one CPU involved)
+    dataset = dataset.batch(500)
+    
+    # 4. Loop over prediction horizon. Do one-step-ahead predictions for multible copies of the time
+    # series and concatenate these to time series for next prediction iteration. 
+    # Add bootstrapped error (randomly choosen from residuals) at every iteration. 
+    for i in range(14):
+        prediction = model.predict(dataset, verbose=0)[:, -1, 0] #Predicting, keeping only one-step-ahead predictions
+        # Add errors to predictions (but not to the first, as it will be the prediction without error)
+        random_residuals = np.random.choice(residuals, prediction.shape) # select random residuals
+        random_residuals[0] = 0 # first time series will be without error (prediction itself)
+        prediction = prediction + random_residuals
+        # Calculate date that fits to one-step-ahead prediction
+        one_step_ahead = df_.iloc[-1].date + dt.timedelta(days=1)
+        # Calculate the next day to the predicted day, to calculate the information about the next
+        # day. These are necessary for the next iteration of model.predict()
+        next_day = one_step_ahead + dt.timedelta(days=1)
+        list_day_info = [next_day.weekday()==6, next_day.weekday()==5, next_day.weekday()<5]
+        # append new predictions with error to Dataframe holding the time series (saving results)
+        df_.loc[len(df_.index)] = [one_step_ahead, 0] + list_day_info + list(prediction*1E5)
+        
+        # Appending predictions and information about next day to dataset, to prepare it for 
+        # model.predict() of next iteration
+        # Multiply list with day information and reshape, in order to concatenate it to predictions
+        day_info = (np.array(list_day_info*(bootstrap_size+1))
+                    .reshape(bootstrap_size+1, 3))
+        prediction_and_day_info = np.concatenate([prediction.reshape(bootstrap_size+1, -1), 
+                                                  day_info], axis=1)
+        # Create dataset over prediction_and_day_info and zip it with dataset
+        dataset_prediction = Dataset.from_tensor_slices(prediction_and_day_info)
+        dataset = dataset.unbatch()
+        dataset = Dataset.zip(dataset, dataset_prediction)
+        
+        # Map and add predictions as values for new day in time series and neglect oldest day
+        # This moves the 21 day window of time series one step ahead.
+        dataset = dataset.map(lambda x, y: concat([x[1:, :], expand_dims(y, axis=0)], axis=0))
+        # Batch (Prefetching is not applied, as only one CPU involved)
+        dataset = dataset.batch(500)
+        
+    # Select error margins of predictions according to alpha from all calculated time series
+    error_margins = df_.iloc[-14:, 6:].quantile([1-alpha, alpha], axis=1).T
+    # Rename columns
+    error_margins.rename(columns=lambda s: 'err_interval_' + str(round(s, 2)), inplace=True)
+    # Calculate the 14 day-ahead-prediction (for comparison to one-step-ahead prediction)
+    _, sequence_pred = simple_sequence_pred(model, df_.iloc[:11, :5])
+    # Concat one-step-ahead prediction, error margins and 14-days-ahead prediction to output frame
+    df_output = pd.concat([
+        df_[['date']][-14:].reset_index(drop=True), #Date information
+        df_[['one_step_ahead']][-14:].reset_index(drop=True), # column containing one-step-ahead prediction
+        error_margins.reset_index(drop=True), # columns containing upper and lower limit of error interval
+        pd.DataFrame(sequence_pred, columns=['14_days_ahead']) # column containing 14 days prediction
+        # in one shot
+    ], axis=1)
+    return df_output
