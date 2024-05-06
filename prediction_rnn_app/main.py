@@ -2,14 +2,14 @@ from fastapi import FastAPI
 import finrail_rnn_model
 import numpy as np
 import os
+import re
 from sqlalchemy import create_engine
 import sys
 from tensorflow.keras import models
 
-# Add finrail_rnn_model module to access rnn models for predictions
-modules_path = os.path.join(os.getcwd(), 'data_collect_app')
-if modules_path not in sys.path:
-    sys.path.append(modules_path)
+# Load environment variable that holds installing directory in container
+app_dir = os.environ['APP_DIR']
+#app_dir = 
 
 # Load environment variables with informations for data base connection
 db_name = os.environ['DB_NAME']
@@ -32,11 +32,11 @@ async def prediction_commuter():
     Additional information is given in JSON answer. See swagger documentation for details
     '''
     # Load trained model for this purpose
-    path_model = os.path.join(os.getcwd(), 'app/finrail_api/rnn_commuter.keras')
+    path_model = os.path.join(os.getcwd(), f'{app_dir}rnn_commuter.keras')
     model = models.load_model(path_model, 
         custom_objects={'Custom_Metric': finrail_rnn_model.Custom_Metric})
     # Load sql query to load time series up to newest date available
-    path_sql_query = os.path.join(os.getcwd(), 'app/finrail_api/timeseries_query.txt')
+    path_sql_query = os.path.join(os.getcwd(), f'{app_dir}timeseries_query.txt')
     with open(path_sql_query, 'r') as f:
         sql_query = f.read()
     # Load time series from database
@@ -67,11 +67,11 @@ async def prediction_long_distance():
     Additional information is given in JSON answer. See swagger documentation for details
     '''
     # Load trained model for this purpose
-    path_model = os.path.join(os.getcwd(), 'app/finrail_api/rnn_long_distance.keras')
+    path_model = os.path.join(os.getcwd(), f'{app_dir}rnn_long_distance.keras')
     model = models.load_model(path_model, 
         custom_objects={'Custom_Metric': finrail_rnn_model.Custom_Metric})
     # Load sql query to load time series up to newest date available
-    path_sql_query = os.path.join(os.getcwd(), 'app/finrail_api/timeseries_query.txt')
+    path_sql_query = os.path.join(os.getcwd(), f'{app_dir}timeseries_query.txt')
     with open(path_sql_query, 'r') as f:
         sql_query = f.read()
     # Load time series from database
@@ -102,11 +102,11 @@ async def prediction_long_distance():
     Additional information is given in JSON answer. See swagger documentation for details
     '''
     # Load trained model for this purpose
-    path_model = os.path.join(os.getcwd(), 'app/finrail_api/rnn_long_distance.keras')
+    path_model = os.path.join(os.getcwd(), f'{app_dir}rnn_long_distance.keras')
     model = models.load_model(path_model, 
         custom_objects={'Custom_Metric': finrail_rnn_model.Custom_Metric})
     # Load sql query to load time series up to newest date available
-    path_sql_query = os.path.join(os.getcwd(), 'app/finrail_api/timeseries_query.txt')
+    path_sql_query = os.path.join(os.getcwd(), f'{app_dir}timeseries_query.txt')
     with open(path_sql_query, 'r') as f:
         sql_query = f.read()
     # Load time series from database
@@ -135,3 +135,8 @@ async def prediction_long_distance():
                                     'error_provided': True,
                                     'days': days}}
     return response
+
+def load_model(model_name, dir=f'{app_dir}'):
+    '''
+    '''
+    os.path.join([dir, model_name])
