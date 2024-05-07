@@ -8,9 +8,6 @@ ENV APP_DIR=/app/finrail_api/
 # copy necessary files from development folder to image
 COPY main.py finrail_rnn_model.py timeseries_query.txt rnn_commuter.keras rnn_long_distance.keras requirements.txt ${APP_DIR}
 
-# Update pip (in order to find desired version of tensorflow)
-RUN pip install --upgrade pip
-
 # Install dependencies of python code via pip
 RUN pip install -r .${APP_DIR}requirements.txt
 
