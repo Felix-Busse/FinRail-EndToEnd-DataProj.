@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # MySQL Server
-  my_sql_db:
+  my_sql_database:
     image: mysql:8.0
     ports:
       - 5000:3306
@@ -14,7 +14,7 @@ services:
       MYSQL_PASSWORD: ${COMPOSE_DB_PSW}
     volumes:
       # Use a named volume to provide persistent memory
-      - my_sql_data:/var/lib/mysql
+      - my_sql_database:/var/lib/mysql
 
   data_collect_app:
     # Build and run data_collect_app (cron job to update data in data base)
@@ -27,10 +27,10 @@ services:
       DB_PSW: ${COMPOSE_DB_PSW}
       DB_USER: ${COMPOSE_DB_USER}
       DB_NAME: ${COMPOSE_DB_NAME}
-      DB_SERVER: my_sql_db
+      DB_SERVER: my_sql_database
     depends_on:
       # This service depends on data base service
-      - my_sql_db
+      - my_sql_database
 
   prediction_rnn_app:
     # Build and run prediction_app
@@ -46,12 +46,12 @@ services:
       DB_PSW: ${COMPOSE_DB_PSW}
       DB_USER: ${COMPOSE_DB_USER}
       DB_NAME: ${COMPOSE_DB_NAME}
-      DB_SERVER: my_sql_db
+      DB_SERVER: my_sql_database
     depends_on:
       # This service depends on data base service
-      - my_sql_db
+      - my_sql_database
 
 volumes:
-  my_sql_data:
+  my_sql_database:
     # Assign named volume to local hard disc
     driver: local

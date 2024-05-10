@@ -327,12 +327,20 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
     # Iterate over all dates in generator and collect data from API and 
     # store it in database
     for date in gen_dates:
-        r = requests.get(
-            'https://rata.digitraffic.fi/api/v1/compositions/' + str(date)
-        )
-        if r.status_code != 200: # Handle errors from requesting API
-            print('API on rata.digitraffic.fi/api/v1/compositions/ is not \
-                accessible')
+        try:
+            r = requests.get(
+                'https://rata.digitraffic.fi/api/v1/compositions/' + str(date)
+            )
+        except requests.exceptions.ConnectionError as err:
+            err.args = ['Source API can not be contacted.']
+            raise
+        except:
+            raise
+        # Handle errors from requesting API
+        if r.status_code != 200: 
+            print(
+                f'Source API answered with error code: {r.status_code}'
+            )
             return None
         else:
             try:
@@ -342,7 +350,7 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
             except:
                 # Handle errors that occured from accessing database
                 print('finrail database is not accessible. In "Adding data"')
-                return None
+                raise
         if verbose > 0:
             # Print date of data just processed, if desired
             print('Added data of date: ' + str(date))
@@ -398,18 +406,26 @@ def update_timeseries(s, engine, path_query):
     # each train
     # 3. Sum length of wagons for all trains per day, grouped by train 
     # category (Commuter, Long-distance)
-    with engine.connect() as connection:
-        df = pd.read_sql_query(text(sql_query_str), connection)
-    
-    # Call "tweak_train()" function to obtain timeseries from result of query
-    df = tweak_train(df)
+    try:
+        with engine.connect() as connection:
+            df = pd.read_sql_query(text(sql_query_str), connection)
+    except Exception as err:
+        err.args = [
+            'Error in executing query on table "trains, wagon, journey_ection,'
+            ' locomotive" in database "finrail".'
+        ]
+        raise
+    else:         
+        # Call "tweak_train()" function to obtain timeseries from result 
+        # of query
+        df = tweak_train(df)
 
     # Create table in database, if not exists
     try:
         Base.metadata.tables['timeseries'].create(engine, checkfirst=True)
     except: 
         print('Error on accessing database on creation of table "timeseries".')
-        return None
+        raise
     
     # Read out latest time stored in database table "timeseries"
     try:
@@ -419,7 +435,7 @@ def update_timeseries(s, engine, path_query):
             latest_db_date = dt.date(1900, 1, 1)
     except:
         print('Error while quering table "timeseries"')
-        return None
+        raise
     
     # Take part of timeseries not stored in database and convert to dictionary
     timeseries_dict = dict(df[df.date > pd.to_datetime(latest_db_date)])

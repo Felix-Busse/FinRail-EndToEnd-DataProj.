@@ -3,6 +3,7 @@ import numpy as np
 import os
 import re
 from sqlalchemy import create_engine
+from sqlalchemy.exc import ProgrammingError 
 import sys
 from tensorflow.keras import models
 
@@ -22,7 +23,9 @@ engine = create_engine(f'mysql+mysqlconnector://{db_usr}:{db_psw}@' +
 app_dir = os.environ['APP_DIR']
 # Process string and cut it to parts, to work with file path manipulation
 app_dir = re.sub('^/|/$', '', app_dir)
-app_dir_parts = re.split('/', app_dir)
+app_dir_parts = re.split(os.path.sep, app_dir)
+# Add leading path seperator, as this is absolute path
+app_dir_parts = [os.path.sep] + app_dir_parts
 
 def load_from_subdirectory(filename, sub_dir_path_list=[]):
     '''Function reads back file passed to function. Subdirectory may be 
@@ -38,11 +41,14 @@ def load_from_subdirectory(filename, sub_dir_path_list=[]):
     '''
     # Concatenate lists to represent complete path to file and join list to 
     # final file path
-    path_list = [os.getcwd()] + sub_dir_path_list + [filename]
+    path_list = sub_dir_path_list + [filename]
     path = os.path.join(*path_list)
-    # Do the reading from file
-    with open(path, 'r') as f:
-        return f.read()
+    # Do the reading from 
+    try:
+        with open(path, 'r') as f:
+            return f.read()
+    except:
+        raise IOError('Could not load file from subdirectory.')
 
 def load_tensorflow_model(filename, sub_dir_path_list=[], 
     custom_objects={'Custom_Metric': finrail_rnn_model.Custom_Metric}):
@@ -64,7 +70,10 @@ def load_tensorflow_model(filename, sub_dir_path_list=[],
     # final file path
     path_list = [os.getcwd()] + sub_dir_path_list + [filename]
     path = os.path.join(*path_list)
-    return models.load_model(path, custom_objects=custom_objects)
+    try:
+        return models.load_model(path, custom_objects=custom_objects)
+    except:
+        raise IOError('Could not load tf.keras model.')
 
 # Create FastAPI instance
 app = FastAPI()
@@ -79,12 +88,48 @@ async def prediction_commuter():
     for details.
     '''
     # Load trained model for this purpose
-    model = load_tensorflow_model('rnn_commuter.keras', app_dir_parts)
+    try:
+        model = load_tensorflow_model('rnn_commuter.keras', app_dir_parts)
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
-    sql_query = load_from_subdirectory('timeseries_query.txt', app_dir_parts)
+    try:
+        sql_query = load_from_subdirectory(
+            'timeseries_query.txt', app_dir_parts
+        )
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error message in response of API
+        return {'Error': err.args}
     # Load time series from database
-    df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
-        str_query=sql_query)
+    try:
+        df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
+            str_query=sql_query)
+    except ProgrammingError as err:
+        # Print error to terminal
+        print(*err.args)
+        # Display error in response of API
+        return {'Error': err.args}
+    except:
+        # Print error to terminal
+        print('Could not load time series from database. Check database '
+            'server.')
+        # Display error in response of API
+        return {
+            'Error': 'Could not load time series from database. Check '
+            'database server.'
+        }
+    # Check, whether enough data is present to make predictions
+    if df.index.size < 21:
+        return {
+            'Error': 'Not enough time steps in database to start prediction. '
+            'Database must hold at least 21 time steps for reasonable '
+            'predictions'
+        }
     # Use tweak-function to process DataFrame and add one-hot-encodings, keep 
     # only last 21 days.
     df = finrail_rnn_model.tweak_timeseries(df).iloc[-21:, :]
@@ -101,7 +146,7 @@ async def prediction_commuter():
         for i, (date, val) in enumerate(zip(dates, prediction))
     ]
     no_days = len(prediction)
-    response = {
+    return {
         'prediction': {
             'name': 'commuter', 
             'day_count': no_days,
@@ -112,7 +157,6 @@ async def prediction_commuter():
             'days': days
         }   
     }
-    return response
 
 # Define endpoint for delivery of time series prediction of long_distance
 # services
@@ -125,12 +169,48 @@ async def prediction_long_distance():
     for details.
     '''
     # Load trained model for this purpose
-    model = load_tensorflow_model('rnn_long_distance.keras', app_dir_parts)
+    try:
+        model = load_tensorflow_model('rnn_long_distance.keras', app_dir_parts)
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
-    sql_query = load_from_subdirectory('timeseries_query.txt', app_dir_parts)
+    try:
+        sql_query = load_from_subdirectory(
+            'timeseries_query.txt', app_dir_parts
+        )
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load time series from database
-    df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
-        str_query=sql_query)
+    try:
+        df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
+            str_query=sql_query)
+    except ProgrammingError as err:
+        # Print error to terminal
+        print(*err.args)
+        # Display error in response of API
+        return {'Error': err.args}
+    except:
+        # Print error to terminal
+        print('Could not load time series from database. Check database '
+            'server.')
+        # Display error in response of API
+        return {
+            'Error': 'Could not load time series from database. Check '
+            'database server.'
+        }
+    # Check, whether enough data is present to make predictions
+    if df.index.size < 21:
+        return {
+            'Error': 'Not enough time steps in database to start prediction. '
+            'Database must hold at least 21 time steps for reasonable '
+            'predictions'
+        }
     # Use tweak-function to process DataFrame and add one-hot-encodings, keep 
     # only last 21 days.
     df = finrail_rnn_model.tweak_timeseries(df).iloc[-21:, :]
@@ -147,7 +227,7 @@ async def prediction_long_distance():
         for i, (date, val) in enumerate(zip(dates, prediction))
     ]
     no_days = len(prediction)
-    response = {
+    return {
         'prediction': {
             'name': 'long_distance', 
             'day_count': no_days,
@@ -158,7 +238,6 @@ async def prediction_long_distance():
             'days': days
         }
     }
-    return response
 
 # Define endpoint for delivery of time series prediction of long_distance 
 # services with errors
@@ -172,12 +251,48 @@ async def prediction_long_distance_w_error():
     for details.
     '''
     # Load trained model for this purpose
-    model = load_tensorflow_model('rnn_long_distance.keras', app_dir_parts)
+    try:
+        model = load_tensorflow_model('rnn_long_distance.keras', app_dir_parts)
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
-    sql_query = load_from_subdirectory('timeseries_query.txt', app_dir_parts)
+    try:
+        sql_query = load_from_subdirectory(
+            'timeseries_query.txt', app_dir_parts
+        )
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load time series from database
-    df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
-        str_query=sql_query)
+    try:
+        df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
+            str_query=sql_query)
+    except ProgrammingError as err:
+        # Print error to terminal
+        print(*err.args)
+        # Display error in response of API
+        return {'Error': err.args}
+    except:
+        # Print error to terminal
+        print('Could not load time series from database. Check database '
+            'server.')
+        # Display error in response of API
+        return {
+            'Error': 'Could not load time series from database. Check '
+            'database server.'
+        }
+    # Check, whether enough data is present to make predictions
+    if df.index.size < 21:
+        return {
+            'Error': 'Not enough time steps in database to start prediction. '
+            'Database must hold at least 21 time steps for reasonable '
+            'predictions'
+        }
     # Use tweak-function to process DataFrame and add one-hot-encodings, keep 
     # only last 21 days.
     df = finrail_rnn_model.tweak_timeseries(df)
@@ -204,7 +319,7 @@ async def prediction_long_distance_w_error():
         df_pred.iloc[:, 2], df_pred.iloc[:, 3]))
     ]
     no_days = len(df_pred.one_step_ahead)
-    response = {
+    return {
         'prediction': {
             'name': 'long_distance', 
             'day_count': no_days,
@@ -215,7 +330,6 @@ async def prediction_long_distance_w_error():
             'days': days
         }
     }
-    return response
 
 # Define endpoint for delivery of time series prediction of commuter services 
 # with errors
@@ -229,12 +343,46 @@ async def prediction_commuter_w_error():
     for details.
     '''
     # Load trained model for this purpose
-    model = load_tensorflow_model('rnn_commuter.keras', app_dir_parts)
+    try:
+        model = load_tensorflow_model('rnn_commuter.keras', app_dir_parts)
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args)
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
-    sql_query = load_from_subdirectory('timeseries_query.txt', app_dir_parts)
+    try:
+        sql_query = load_from_subdirectory(
+            'timeseries_query.txt', app_dir_parts
+        )
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
     # Load time series from database
-    df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
-        str_query=sql_query)
+    try:
+        df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
+            str_query=sql_query)
+    except ProgrammingError as err:
+        print(*err.args) # Print error to terminal
+        return {'Error': err.args} # Display error in response of API
+    except:
+        # Print error to terminal
+        print('Could not load time series from database. Check database '
+            'server.')
+         # Display error in response of API
+        return {
+            'Error': 'Could not load time series from database. Check '
+            'database server.'
+        }
+    # Check, whether enough data is present to make predictions
+    if df.index.size < 21:
+        return {
+            'Error': 'Not enough time steps in database to start prediction. '
+            'Database must hold at least 21 time steps for reasonable '
+            'predictions'
+        }
     # Use tweak-function to process DataFrame and add one-hot-encodings, keep 
     # only last 21 days.
     df = finrail_rnn_model.tweak_timeseries(df)
@@ -260,7 +408,7 @@ async def prediction_commuter_w_error():
         df_pred.iloc[:, 2], df_pred.iloc[:, 3]))
     ]
     no_days = len(df_pred.one_step_ahead)
-    response = {
+    return {
         'prediction': {
             'name': 'commuter', 
             'day_count': no_days,
@@ -271,4 +419,3 @@ async def prediction_commuter_w_error():
             'days': days
         }
     }
-    return response

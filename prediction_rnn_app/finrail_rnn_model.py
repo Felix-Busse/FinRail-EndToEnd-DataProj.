@@ -2,6 +2,7 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 from sqlalchemy import text
+from sqlalchemy.exc import ProgrammingError
 from tensorflow import (cast, reduce_sum, size, float32, transpose, concat, 
     expand_dims, TensorSpec)
 from tensorflow.data import AUTOTUNE, Dataset
@@ -173,9 +174,25 @@ def read_timeseries_from_database(engine, str_query):
     '''
     # Use pandas read_sql_query function to execute passed sql query
     with engine.connect() as connection:
-        df_ = pd.read_sql_query(text(str_query), connection, index_col='id')
-    # Reset index in obtained DataFrame and return it
-    return df_.reset_index(drop=True)
+        try:
+            df_ = pd.read_sql_query(
+                text(str_query), connection, index_col='id'
+            )
+        except ProgrammingError as err: 
+            print('Could not read from table "timeseries".')
+            err.args = [
+                'No data in database. Please wait for database to fill with '
+                'data. This may take several hours after installation, as'
+                'data_collect_app needs to start from cron deamon first and '
+                'than start downloading, processing and storing data.'
+            ]
+            raise
+        except:
+            print('Could not read from database.')
+            raise
+        else: 
+            # Reset index in obtained DataFrame and return it
+            return df_.reset_index(drop=True)
 
 def tweak_timeseries(df_):
     '''Function updates DateFrame returned from SQL-query and adds 

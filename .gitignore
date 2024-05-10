@@ -1,2 +1,4 @@
 # ignore pycache folder
 __pycache__/
+# ignore notebook chechpoints
+.ipynb_checkpoints/
