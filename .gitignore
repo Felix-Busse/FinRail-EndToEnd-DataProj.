@@ -2,3 +2,6 @@
 __pycache__/
 # ignore notebook chechpoints
 .ipynb_checkpoints/
+# ignore tensorboard logs
+tf_log/
+
