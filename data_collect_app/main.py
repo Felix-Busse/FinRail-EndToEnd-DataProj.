@@ -4,7 +4,6 @@ import os
 import re
 from requests.exceptions import ConnectionError
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 # Read environment variables needed to connect to database
 db_psw = os.environ['DB_PSW']
@@ -26,8 +25,6 @@ app_dir_parts = [os.path.sep] + app_dir_parts
 
 # Create database engine and open session
 engine = finrail_db.create_tables(db_str)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 # Construct file path for file containing sql query
 sql_query_parts = app_dir_parts + ['sql_query.txt']
@@ -35,7 +32,9 @@ path_sql_query = os.path.join(*sql_query_parts)
 
 # Pass session to update data base with missing data, use today as end date
 try:
-    finrail_db.add_compositions(s=session, date_end=dt.date.today(), verbose=1)
+    finrail_db.add_compositions(
+        engine=engine, date_end=dt.date.today(), verbose=1
+    )
 except ConnectionError as err:
     print('No connection could be established to source API. Check network.')
     print(*err.args)
@@ -45,10 +44,7 @@ except Exception as err:
 # Update table "timeseries" using data stored in data base
 try:
     finrail_db.update_timeseries(
-        s=session, engine=engine, path_query=path_sql_query
+        engine=engine, path_query=path_sql_query
     )
 except Exception as err:
     print(*err.args)
-
-# Close session at the end
-session.close()

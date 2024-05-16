@@ -1,0 +1,1332 @@
+Returned list of trains with 835 elements
+Added data of date: 2015-12-12
+Returned list of trains with 726 elements
+Added data of date: 2015-12-13
+Returned list of trains with 1116 elements
+Added data of date: 2015-12-14
+Returned list of trains with 1114 elements
+Added data of date: 2015-12-15
+Returned list of trains with 1118 elements
+Added data of date: 2015-12-16
+Returned list of trains with 1076 elements
+Added data of date: 2015-12-17
+Returned list of trains with 1107 elements
+Added data of date: 2015-12-18
+Returned list of trains with 887 elements
+Added data of date: 2015-12-19
+Returned list of trains with 741 elements
+Added data of date: 2015-12-20
+Returned list of trains with 1113 elements
+Added data of date: 2015-12-21
+Returned list of trains with 1116 elements
+Added data of date: 2015-12-22
+Returned list of trains with 1120 elements
+Added data of date: 2015-12-23
+Returned list of trains with 574 elements
+Added data of date: 2015-12-24
+Returned list of trains with 531 elements
+Added data of date: 2015-12-25
+Returned list of trains with 714 elements
+Added data of date: 2015-12-26
+Returned list of trains with 745 elements
+Added data of date: 2015-12-27
+Returned list of trains with 1125 elements
+Added data of date: 2015-12-28
+Returned list of trains with 1117 elements
+Added data of date: 2015-12-29
+Returned list of trains with 1118 elements
+Added data of date: 2015-12-30
+Returned list of trains with 1062 elements
+Added data of date: 2015-12-31
+Returned list of trains with 745 elements
+Added data of date: 2016-01-01
+Returned list of trains with 903 elements
+Added data of date: 2016-01-02
+Returned list of trains with 747 elements
+Added data of date: 2016-01-03
+Returned list of trains with 1111 elements
+Added data of date: 2016-01-04
+Returned list of trains with 1114 elements
+Added data of date: 2016-01-05
+Returned list of trains with 762 elements
+Added data of date: 2016-01-06
+Returned list of trains with 1075 elements
+Added data of date: 2016-01-07
+Returned list of trains with 1063 elements
+Added data of date: 2016-01-08
+Returned list of trains with 912 elements
+Added data of date: 2016-01-09
+Returned list of trains with 742 elements
+Added data of date: 2016-01-10
+Returned list of trains with 1093 elements
+Added data of date: 2016-01-11
+Returned list of trains with 685 elements
+Added data of date: 2016-01-12
+Returned list of trains with 685 elements
+Added data of date: 2016-01-13
+Returned list of trains with 1103 elements
+Added data of date: 2016-01-14
+Returned list of trains with 1108 elements
+Added data of date: 2016-01-15
+Returned list of trains with 900 elements
+Added data of date: 2016-01-16
+Returned list of trains with 744 elements
+Added data of date: 2016-01-17
+Returned list of trains with 1101 elements
+Added data of date: 2016-01-18
+Returned list of trains with 1094 elements
+Added data of date: 2016-01-19
+Returned list of trains with 1080 elements
+Added data of date: 2016-01-20
+Returned list of trains with 1094 elements
+Added data of date: 2016-01-21
+Returned list of trains with 1025 elements
+Added data of date: 2016-01-22
+Returned list of trains with 880 elements
+Added data of date: 2016-01-23
+Returned list of trains with 749 elements
+Added data of date: 2016-01-24
+Returned list of trains with 1117 elements
+Added data of date: 2016-01-25
+Returned list of trains with 1114 elements
+Added data of date: 2016-01-26
+Returned list of trains with 1110 elements
+Added data of date: 2016-01-27
+Returned list of trains with 1124 elements
+Added data of date: 2016-01-28
+Returned list of trains with 1119 elements
+Added data of date: 2016-01-29
+Returned list of trains with 904 elements
+Added data of date: 2016-01-30
+Returned list of trains with 741 elements
+Added data of date: 2016-01-31
+Returned list of trains with 1120 elements
+Added data of date: 2016-02-01
+Returned list of trains with 1116 elements
+Added data of date: 2016-02-02
+Returned list of trains with 1112 elements
+Added data of date: 2016-02-03
+Returned list of trains with 1115 elements
+Added data of date: 2016-02-04
+Returned list of trains with 1091 elements
+Added data of date: 2016-02-05
+Returned list of trains with 899 elements
+Added data of date: 2016-02-06
+Returned list of trains with 727 elements
+Added data of date: 2016-02-07
+Returned list of trains with 1113 elements
+Added data of date: 2016-02-08
+Returned list of trains with 1123 elements
+Added data of date: 2016-02-09
+Returned list of trains with 1113 elements
+Added data of date: 2016-02-10
+Returned list of trains with 1123 elements
+Added data of date: 2016-02-11
+Returned list of trains with 1118 elements
+Added data of date: 2016-02-12
+Returned list of trains with 897 elements
+Added data of date: 2016-02-13
+Returned list of trains with 744 elements
+Added data of date: 2016-02-14
+Returned list of trains with 1113 elements
+Added data of date: 2016-02-15
+Returned list of trains with 1113 elements
+Added data of date: 2016-02-16
+Returned list of trains with 1117 elements
+Added data of date: 2016-02-17
+Returned list of trains with 1123 elements
+Added data of date: 2016-02-18
+Returned list of trains with 1081 elements
+Added data of date: 2016-02-19
+Returned list of trains with 897 elements
+Added data of date: 2016-02-20
+Returned list of trains with 725 elements
+Added data of date: 2016-02-21
+Returned list of trains with 1114 elements
+Added data of date: 2016-02-22
+Returned list of trains with 1102 elements
+Added data of date: 2016-02-23
+Returned list of trains with 1121 elements
+Added data of date: 2016-02-24
+Returned list of trains with 1129 elements
+Added data of date: 2016-02-25
+Returned list of trains with 1121 elements
+Added data of date: 2016-02-26
+Returned list of trains with 901 elements
+Added data of date: 2016-02-27
+Returned list of trains with 743 elements
+Added data of date: 2016-02-28
+Returned list of trains with 1087 elements
+Added data of date: 2016-02-29
+Returned list of trains with 1117 elements
+Added data of date: 2016-03-01
+Returned list of trains with 1120 elements
+Added data of date: 2016-03-02
+Returned list of trains with 1124 elements
+Added data of date: 2016-03-03
+Returned list of trains with 1122 elements
+Added data of date: 2016-03-04
+Returned list of trains with 903 elements
+Added data of date: 2016-03-05
+Returned list of trains with 737 elements
+Added data of date: 2016-03-06
+Returned list of trains with 1113 elements
+Added data of date: 2016-03-07
+Returned list of trains with 1117 elements
+Added data of date: 2016-03-08
+Returned list of trains with 1113 elements
+Added data of date: 2016-03-09
+Returned list of trains with 1122 elements
+Added data of date: 2016-03-10
+Returned list of trains with 1118 elements
+Added data of date: 2016-03-11
+Returned list of trains with 902 elements
+Added data of date: 2016-03-12
+Returned list of trains with 744 elements
+Added data of date: 2016-03-13
+Returned list of trains with 1122 elements
+Added data of date: 2016-03-14
+Returned list of trains with 1125 elements
+Added data of date: 2016-03-15
+Returned list of trains with 1116 elements
+Added data of date: 2016-03-16
+Returned list of trains with 1125 elements
+Added data of date: 2016-03-17
+Returned list of trains with 1118 elements
+Added data of date: 2016-03-18
+Returned list of trains with 904 elements
+Added data of date: 2016-03-19
+Returned list of trains with 740 elements
+Added data of date: 2016-03-20
+Returned list of trains with 1117 elements
+Added data of date: 2016-03-21
+Returned list of trains with 1114 elements
+Added data of date: 2016-03-22
+Returned list of trains with 1104 elements
+Added data of date: 2016-03-23
+Returned list of trains with 1126 elements
+Added data of date: 2016-03-24
+Returned list of trains with 763 elements
+Added data of date: 2016-03-25
+Returned list of trains with 907 elements
+Added data of date: 2016-03-26
+Returned list of trains with 688 elements
+Added data of date: 2016-03-27
+Returned list of trains with 706 elements
+Added data of date: 2016-03-28
+Returned list of trains with 1083 elements
+Added data of date: 2016-03-29
+Returned list of trains with 1062 elements
+Added data of date: 2016-03-30
+Returned list of trains with 875 elements
+Added data of date: 2016-03-31
+Returned list of trains with 1092 elements
+Added data of date: 2016-04-01
+Returned list of trains with 868 elements
+Added data of date: 2016-04-02
+Returned list of trains with 701 elements
+Added data of date: 2016-04-03
+Returned list of trains with 1092 elements
+Added data of date: 2016-04-04
+Returned list of trains with 1097 elements
+Added data of date: 2016-04-05
+Returned list of trains with 1096 elements
+Added data of date: 2016-04-06
+Returned list of trains with 1097 elements
+Added data of date: 2016-04-07
+Returned list of trains with 1101 elements
+Added data of date: 2016-04-08
+Returned list of trains with 870 elements
+Added data of date: 2016-04-09
+Returned list of trains with 705 elements
+Added data of date: 2016-04-10
+Returned list of trains with 1100 elements
+Added data of date: 2016-04-11
+Returned list of trains with 1096 elements
+Added data of date: 2016-04-12
+Returned list of trains with 1093 elements
+Added data of date: 2016-04-13
+Returned list of trains with 1095 elements
+Added data of date: 2016-04-14
+Returned list of trains with 1093 elements
+Added data of date: 2016-04-15
+Returned list of trains with 865 elements
+Added data of date: 2016-04-16
+Returned list of trains with 704 elements
+Added data of date: 2016-04-17
+Returned list of trains with 1088 elements
+Added data of date: 2016-04-18
+Returned list of trains with 1091 elements
+Added data of date: 2016-04-19
+Returned list of trains with 1089 elements
+Added data of date: 2016-04-20
+Returned list of trains with 1097 elements
+Added data of date: 2016-04-21
+Returned list of trains with 1097 elements
+Added data of date: 2016-04-22
+Returned list of trains with 864 elements
+Added data of date: 2016-04-23
+Returned list of trains with 708 elements
+Added data of date: 2016-04-24
+Returned list of trains with 1089 elements
+Added data of date: 2016-04-25
+Returned list of trains with 1089 elements
+Added data of date: 2016-04-26
+Returned list of trains with 1089 elements
+Added data of date: 2016-04-27
+Returned list of trains with 1098 elements
+Added data of date: 2016-04-28
+Returned list of trains with 1093 elements
+Added data of date: 2016-04-29
+Returned list of trains with 862 elements
+Added data of date: 2016-04-30
+Returned list of trains with 759 elements
+Added data of date: 2016-05-01
+Returned list of trains with 1087 elements
+Added data of date: 2016-05-02
+Returned list of trains with 1073 elements
+Added data of date: 2016-05-03
+Returned list of trains with 1089 elements
+Added data of date: 2016-05-04
+Returned list of trains with 724 elements
+Added data of date: 2016-05-05
+Returned list of trains with 1095 elements
+Added data of date: 2016-05-06
+Returned list of trains with 863 elements
+Added data of date: 2016-05-07
+Returned list of trains with 699 elements
+Added data of date: 2016-05-08
+Returned list of trains with 1089 elements
+Added data of date: 2016-05-09
+Returned list of trains with 1096 elements
+Added data of date: 2016-05-10
+Returned list of trains with 1086 elements
+Added data of date: 2016-05-11
+Returned list of trains with 1088 elements
+Added data of date: 2016-05-12
+Returned list of trains with 1062 elements
+Added data of date: 2016-05-13
+Returned list of trains with 864 elements
+Added data of date: 2016-05-14
+Returned list of trains with 698 elements
+Added data of date: 2016-05-15
+Returned list of trains with 1086 elements
+Added data of date: 2016-05-16
+Returned list of trains with 1091 elements
+Added data of date: 2016-05-17
+Returned list of trains with 1091 elements
+Added data of date: 2016-05-18
+Returned list of trains with 1095 elements
+Added data of date: 2016-05-19
+Returned list of trains with 1099 elements
+Added data of date: 2016-05-20
+Returned list of trains with 857 elements
+Added data of date: 2016-05-21
+Returned list of trains with 700 elements
+Added data of date: 2016-05-22
+Returned list of trains with 1039 elements
+Added data of date: 2016-05-23
+Returned list of trains with 1085 elements
+Added data of date: 2016-05-24
+Returned list of trains with 1091 elements
+Added data of date: 2016-05-25
+Returned list of trains with 1089 elements
+Added data of date: 2016-05-26
+Returned list of trains with 1095 elements
+Added data of date: 2016-05-27
+Returned list of trains with 863 elements
+Added data of date: 2016-05-28
+Returned list of trains with 705 elements
+Added data of date: 2016-05-29
+Returned list of trains with 1093 elements
+Added data of date: 2016-05-30
+Returned list of trains with 1086 elements
+Added data of date: 2016-05-31
+Returned list of trains with 1100 elements
+Added data of date: 2016-06-01
+Returned list of trains with 1089 elements
+Added data of date: 2016-06-02
+Returned list of trains with 1076 elements
+Added data of date: 2016-06-03
+Returned list of trains with 852 elements
+Added data of date: 2016-06-04
+Returned list of trains with 706 elements
+Added data of date: 2016-06-05
+Returned list of trains with 1078 elements
+Added data of date: 2016-06-06
+Returned list of trains with 1061 elements
+Added data of date: 2016-06-07
+Returned list of trains with 1073 elements
+Added data of date: 2016-06-08
+Returned list of trains with 1092 elements
+Added data of date: 2016-06-09
+Returned list of trains with 1102 elements
+Added data of date: 2016-06-10
+Returned list of trains with 871 elements
+Added data of date: 2016-06-11
+Returned list of trains with 700 elements
+Added data of date: 2016-06-12
+Returned list of trains with 1087 elements
+Added data of date: 2016-06-13
+Returned list of trains with 1103 elements
+Added data of date: 2016-06-14
+Returned list of trains with 1100 elements
+Added data of date: 2016-06-15
+Returned list of trains with 1101 elements
+Added data of date: 2016-06-16
+Returned list of trains with 1099 elements
+Added data of date: 2016-06-17
+Returned list of trains with 865 elements
+Added data of date: 2016-06-18
+Returned list of trains with 707 elements
+Added data of date: 2016-06-19
+Returned list of trains with 1076 elements
+Added data of date: 2016-06-20
+Returned list of trains with 1065 elements
+Added data of date: 2016-06-21
+Returned list of trains with 1045 elements
+Added data of date: 2016-06-22
+Returned list of trains with 1096 elements
+Added data of date: 2016-06-23
+Returned list of trains with 846 elements
+Added data of date: 2016-06-24
+Returned list of trains with 660 elements
+Added data of date: 2016-06-25
+Returned list of trains with 707 elements
+Added data of date: 2016-06-26
+Returned list of trains with 1078 elements
+Added data of date: 2016-06-27
+Returned list of trains with 1067 elements
+Added data of date: 2016-06-28
+Returned list of trains with 984 elements
+Added data of date: 2016-06-29
+Returned list of trains with 1068 elements
+Added data of date: 2016-06-30
+Returned list of trains with 1067 elements
+Added data of date: 2016-07-01
+Returned list of trains with 863 elements
+Added data of date: 2016-07-02
+Returned list of trains with 704 elements
+Added data of date: 2016-07-03
+Returned list of trains with 1060 elements
+Added data of date: 2016-07-04
+Returned list of trains with 1067 elements
+Added data of date: 2016-07-05
+Returned list of trains with 1075 elements
+Added data of date: 2016-07-06
+Returned list of trains with 1038 elements
+Added data of date: 2016-07-07
+Returned list of trains with 1060 elements
+Added data of date: 2016-07-08
+Returned list of trains with 867 elements
+Added data of date: 2016-07-09
+Returned list of trains with 710 elements
+Added data of date: 2016-07-10
+Returned list of trains with 1072 elements
+Added data of date: 2016-07-11
+Returned list of trains with 1071 elements
+Added data of date: 2016-07-12
+Returned list of trains with 1080 elements
+Added data of date: 2016-07-13
+Returned list of trains with 1060 elements
+Added data of date: 2016-07-14
+Returned list of trains with 1065 elements
+Added data of date: 2016-07-15
+Returned list of trains with 852 elements
+Added data of date: 2016-07-16
+Returned list of trains with 698 elements
+Added data of date: 2016-07-17
+Returned list of trains with 1066 elements
+Added data of date: 2016-07-18
+Returned list of trains with 1067 elements
+Added data of date: 2016-07-19
+Returned list of trains with 1063 elements
+Added data of date: 2016-07-20
+Returned list of trains with 1076 elements
+Added data of date: 2016-07-21
+Returned list of trains with 1076 elements
+Added data of date: 2016-07-22
+Returned list of trains with 846 elements
+Added data of date: 2016-07-23
+Returned list of trains with 690 elements
+Added data of date: 2016-07-24
+Returned list of trains with 1072 elements
+Added data of date: 2016-07-25
+Returned list of trains with 1069 elements
+Added data of date: 2016-07-26
+Returned list of trains with 1069 elements
+Added data of date: 2016-07-27
+Returned list of trains with 1066 elements
+Added data of date: 2016-07-28
+Returned list of trains with 1080 elements
+Added data of date: 2016-07-29
+Returned list of trains with 857 elements
+Added data of date: 2016-07-30
+Returned list of trains with 701 elements
+Added data of date: 2016-07-31
+Returned list of trains with 1051 elements
+Added data of date: 2016-08-01
+Returned list of trains with 1067 elements
+Added data of date: 2016-08-02
+Returned list of trains with 1057 elements
+Added data of date: 2016-08-03
+Returned list of trains with 1074 elements
+Added data of date: 2016-08-04
+Returned list of trains with 1069 elements
+Added data of date: 2016-08-05
+Returned list of trains with 850 elements
+Added data of date: 2016-08-06
+Returned list of trains with 707 elements
+Added data of date: 2016-08-07
+Returned list of trains with 1068 elements
+Added data of date: 2016-08-08
+Returned list of trains with 1068 elements
+Added data of date: 2016-08-09
+Returned list of trains with 1075 elements
+Added data of date: 2016-08-10
+Returned list of trains with 1065 elements
+Added data of date: 2016-08-11
+Returned list of trains with 1081 elements
+Added data of date: 2016-08-12
+Returned list of trains with 852 elements
+Added data of date: 2016-08-13
+Returned list of trains with 697 elements
+Added data of date: 2016-08-14
+Returned list of trains with 1078 elements
+Added data of date: 2016-08-15
+Returned list of trains with 1065 elements
+Added data of date: 2016-08-16
+Returned list of trains with 1069 elements
+Added data of date: 2016-08-17
+Returned list of trains with 1083 elements
+Added data of date: 2016-08-18
+Returned list of trains with 1091 elements
+Added data of date: 2016-08-19
+Returned list of trains with 855 elements
+Added data of date: 2016-08-20
+Returned list of trains with 704 elements
+Added data of date: 2016-08-21
+Returned list of trains with 1056 elements
+Added data of date: 2016-08-22
+Returned list of trains with 1065 elements
+Added data of date: 2016-08-23
+Returned list of trains with 1078 elements
+Added data of date: 2016-08-24
+Returned list of trains with 1087 elements
+Added data of date: 2016-08-25
+Returned list of trains with 1102 elements
+Added data of date: 2016-08-26
+Returned list of trains with 857 elements
+Added data of date: 2016-08-27
+Returned list of trains with 694 elements
+Added data of date: 2016-08-28
+Returned list of trains with 1062 elements
+Added data of date: 2016-08-29
+Returned list of trains with 971 elements
+Added data of date: 2016-08-30
+Returned list of trains with 1020 elements
+Added data of date: 2016-08-31
+Returned list of trains with 1062 elements
+Added data of date: 2016-09-01
+Returned list of trains with 1077 elements
+Added data of date: 2016-09-02
+Returned list of trains with 851 elements
+Added data of date: 2016-09-03
+Returned list of trains with 701 elements
+Added data of date: 2016-09-04
+Returned list of trains with 1084 elements
+Added data of date: 2016-09-05
+Returned list of trains with 1076 elements
+Added data of date: 2016-09-06
+Returned list of trains with 1080 elements
+Added data of date: 2016-09-07
+Returned list of trains with 1086 elements
+Added data of date: 2016-09-08
+Returned list of trains with 1084 elements
+Added data of date: 2016-09-09
+Returned list of trains with 851 elements
+Added data of date: 2016-09-10
+Returned list of trains with 694 elements
+Added data of date: 2016-09-11
+Returned list of trains with 1088 elements
+Added data of date: 2016-09-12
+Returned list of trains with 1081 elements
+Added data of date: 2016-09-13
+Returned list of trains with 1097 elements
+Added data of date: 2016-09-14
+Returned list of trains with 1089 elements
+Added data of date: 2016-09-15
+Returned list of trains with 1089 elements
+Added data of date: 2016-09-16
+Returned list of trains with 853 elements
+Added data of date: 2016-09-17
+Returned list of trains with 697 elements
+Added data of date: 2016-09-18
+Returned list of trains with 1084 elements
+Added data of date: 2016-09-19
+Returned list of trains with 1078 elements
+Added data of date: 2016-09-20
+Returned list of trains with 1057 elements
+Added data of date: 2016-09-21
+Returned list of trains with 1059 elements
+Added data of date: 2016-09-22
+Returned list of trains with 1089 elements
+Added data of date: 2016-09-23
+Returned list of trains with 853 elements
+Added data of date: 2016-09-24
+Returned list of trains with 697 elements
+Added data of date: 2016-09-25
+Returned list of trains with 1083 elements
+Added data of date: 2016-09-26
+Returned list of trains with 1084 elements
+Added data of date: 2016-09-27
+Returned list of trains with 1092 elements
+Added data of date: 2016-09-28
+Returned list of trains with 1091 elements
+Added data of date: 2016-09-29
+Returned list of trains with 1090 elements
+Added data of date: 2016-09-30
+Returned list of trains with 860 elements
+Added data of date: 2016-10-01
+Returned list of trains with 695 elements
+Added data of date: 2016-10-02
+Returned list of trains with 1084 elements
+Added data of date: 2016-10-03
+Returned list of trains with 1088 elements
+Added data of date: 2016-10-04
+Returned list of trains with 1081 elements
+Added data of date: 2016-10-05
+Returned list of trains with 1086 elements
+Added data of date: 2016-10-06
+Returned list of trains with 1090 elements
+Added data of date: 2016-10-07
+Returned list of trains with 853 elements
+Added data of date: 2016-10-08
+Returned list of trains with 695 elements
+Added data of date: 2016-10-09
+Returned list of trains with 1087 elements
+Added data of date: 2016-10-10
+Returned list of trains with 1088 elements
+Added data of date: 2016-10-11
+Returned list of trains with 1084 elements
+Added data of date: 2016-10-12
+Returned list of trains with 1083 elements
+Added data of date: 2016-10-13
+Returned list of trains with 1085 elements
+Added data of date: 2016-10-14
+Returned list of trains with 853 elements
+Added data of date: 2016-10-15
+Returned list of trains with 687 elements
+Added data of date: 2016-10-16
+Returned list of trains with 1079 elements
+Added data of date: 2016-10-17
+Returned list of trains with 1089 elements
+Added data of date: 2016-10-18
+Returned list of trains with 1077 elements
+Added data of date: 2016-10-19
+Returned list of trains with 1104 elements
+Added data of date: 2016-10-20
+Returned list of trains with 1110 elements
+Added data of date: 2016-10-21
+Returned list of trains with 871 elements
+Added data of date: 2016-10-22
+Returned list of trains with 716 elements
+Added data of date: 2016-10-23
+Returned list of trains with 1100 elements
+Added data of date: 2016-10-24
+Returned list of trains with 1082 elements
+Added data of date: 2016-10-25
+Returned list of trains with 1084 elements
+Added data of date: 2016-10-26
+Returned list of trains with 1068 elements
+Added data of date: 2016-10-27
+Returned list of trains with 1088 elements
+Added data of date: 2016-10-28
+Returned list of trains with 849 elements
+Added data of date: 2016-10-29
+Returned list of trains with 693 elements
+Added data of date: 2016-10-30
+Returned list of trains with 1073 elements
+Added data of date: 2016-10-31
+Returned list of trains with 1097 elements
+Added data of date: 2016-11-01
+Returned list of trains with 1061 elements
+Added data of date: 2016-11-02
+Returned list of trains with 1092 elements
+Added data of date: 2016-11-03
+Returned list of trains with 1082 elements
+Added data of date: 2016-11-04
+Returned list of trains with 687 elements
+Added data of date: 2016-11-05
+Returned list of trains with 690 elements
+Added data of date: 2016-11-06
+Returned list of trains with 1065 elements
+Added data of date: 2016-11-07
+Returned list of trains with 914 elements
+Added data of date: 2016-11-08
+Returned list of trains with 935 elements
+Added data of date: 2016-11-09
+Returned list of trains with 967 elements
+Added data of date: 2016-11-10
+Returned list of trains with 1089 elements
+Added data of date: 2016-11-11
+Returned list of trains with 851 elements
+Added data of date: 2016-11-12
+Returned list of trains with 697 elements
+Added data of date: 2016-11-13
+Returned list of trains with 1078 elements
+Added data of date: 2016-11-14
+Returned list of trains with 1069 elements
+Added data of date: 2016-11-15
+Returned list of trains with 1085 elements
+Added data of date: 2016-11-16
+Returned list of trains with 1051 elements
+Added data of date: 2016-11-17
+Returned list of trains with 1049 elements
+Added data of date: 2016-11-18
+Returned list of trains with 858 elements
+Added data of date: 2016-11-19
+Returned list of trains with 701 elements
+Added data of date: 2016-11-20
+Returned list of trains with 1080 elements
+Added data of date: 2016-11-21
+Returned list of trains with 1097 elements
+Added data of date: 2016-11-22
+Returned list of trains with 1088 elements
+Added data of date: 2016-11-23
+Returned list of trains with 1088 elements
+Added data of date: 2016-11-24
+Returned list of trains with 1079 elements
+Added data of date: 2016-11-25
+Returned list of trains with 851 elements
+Added data of date: 2016-11-26
+Returned list of trains with 697 elements
+Added data of date: 2016-11-27
+Returned list of trains with 1012 elements
+Added data of date: 2016-11-28
+Returned list of trains with 1083 elements
+Added data of date: 2016-11-29
+Returned list of trains with 1089 elements
+Added data of date: 2016-11-30
+Returned list of trains with 1083 elements
+Added data of date: 2016-12-01
+Returned list of trains with 1091 elements
+Added data of date: 2016-12-02
+Returned list of trains with 853 elements
+Added data of date: 2016-12-03
+Returned list of trains with 703 elements
+Added data of date: 2016-12-04
+Returned list of trains with 1080 elements
+Added data of date: 2016-12-05
+Returned list of trains with 715 elements
+Added data of date: 2016-12-06
+Returned list of trains with 1085 elements
+Added data of date: 2016-12-07
+Returned list of trains with 1108 elements
+Added data of date: 2016-12-08
+Returned list of trains with 1092 elements
+Added data of date: 2016-12-09
+Returned list of trains with 863 elements
+Added data of date: 2016-12-10
+Returned list of trains with 702 elements
+Added data of date: 2016-12-11
+Returned list of trains with 1096 elements
+Added data of date: 2016-12-12
+Returned list of trains with 1112 elements
+Added data of date: 2016-12-13
+Returned list of trains with 1115 elements
+Added data of date: 2016-12-14
+Returned list of trains with 1118 elements
+Added data of date: 2016-12-15
+Returned list of trains with 1119 elements
+Added data of date: 2016-12-16
+Returned list of trains with 890 elements
+Added data of date: 2016-12-17
+Returned list of trains with 729 elements
+Added data of date: 2016-12-18
+Returned list of trains with 1118 elements
+Added data of date: 2016-12-19
+Returned list of trains with 1108 elements
+Added data of date: 2016-12-20
+Returned list of trains with 1110 elements
+Added data of date: 2016-12-21
+Returned list of trains with 1113 elements
+Added data of date: 2016-12-22
+Returned list of trains with 1116 elements
+Added data of date: 2016-12-23
+Returned list of trains with 569 elements
+Added data of date: 2016-12-24
+Returned list of trains with 539 elements
+Added data of date: 2016-12-25
+Returned list of trains with 732 elements
+Added data of date: 2016-12-26
+Returned list of trains with 1109 elements
+Added data of date: 2016-12-27
+Returned list of trains with 1115 elements
+Added data of date: 2016-12-28
+Returned list of trains with 1112 elements
+Added data of date: 2016-12-29
+Returned list of trains with 1063 elements
+Added data of date: 2016-12-30
+Returned list of trains with 840 elements
+Added data of date: 2016-12-31
+Returned list of trains with 736 elements
+Added data of date: 2017-01-01
+Returned list of trains with 1114 elements
+Added data of date: 2017-01-02
+Returned list of trains with 1112 elements
+Added data of date: 2017-01-03
+Returned list of trains with 1073 elements
+Added data of date: 2017-01-04
+Returned list of trains with 1003 elements
+Added data of date: 2017-01-05
+Returned list of trains with 746 elements
+Added data of date: 2017-01-06
+Returned list of trains with 822 elements
+Added data of date: 2017-01-07
+Returned list of trains with 716 elements
+Added data of date: 2017-01-08
+Returned list of trains with 1093 elements
+Added data of date: 2017-01-09
+Returned list of trains with 1116 elements
+Added data of date: 2017-01-10
+Returned list of trains with 1111 elements
+Added data of date: 2017-01-11
+Returned list of trains with 1085 elements
+Added data of date: 2017-01-12
+Returned list of trains with 1118 elements
+Added data of date: 2017-01-13
+Returned list of trains with 880 elements
+Added data of date: 2017-01-14
+Returned list of trains with 730 elements
+Added data of date: 2017-01-15
+Returned list of trains with 1118 elements
+Added data of date: 2017-01-16
+Returned list of trains with 1125 elements
+Added data of date: 2017-01-17
+Returned list of trains with 1123 elements
+Added data of date: 2017-01-18
+Returned list of trains with 1116 elements
+Added data of date: 2017-01-19
+Returned list of trains with 1124 elements
+Added data of date: 2017-01-20
+Returned list of trains with 883 elements
+Added data of date: 2017-01-21
+Returned list of trains with 654 elements
+Added data of date: 2017-01-22
+Returned list of trains with 1110 elements
+Added data of date: 2017-01-23
+Returned list of trains with 1117 elements
+Added data of date: 2017-01-24
+Returned list of trains with 1118 elements
+Added data of date: 2017-01-25
+Returned list of trains with 1129 elements
+Added data of date: 2017-01-26
+Returned list of trains with 1128 elements
+Added data of date: 2017-01-27
+Returned list of trains with 886 elements
+Added data of date: 2017-01-28
+Returned list of trains with 729 elements
+Added data of date: 2017-01-29
+Returned list of trains with 1119 elements
+Added data of date: 2017-01-30
+Returned list of trains with 1111 elements
+Added data of date: 2017-01-31
+Returned list of trains with 1103 elements
+Added data of date: 2017-02-01
+Returned list of trains with 1112 elements
+Added data of date: 2017-02-02
+Returned list of trains with 1118 elements
+Added data of date: 2017-02-03
+Returned list of trains with 875 elements
+Added data of date: 2017-02-04
+Returned list of trains with 726 elements
+Added data of date: 2017-02-05
+Returned list of trains with 1110 elements
+Added data of date: 2017-02-06
+Returned list of trains with 1075 elements
+Added data of date: 2017-02-07
+Returned list of trains with 1106 elements
+Added data of date: 2017-02-08
+Returned list of trains with 1090 elements
+Added data of date: 2017-02-09
+Returned list of trains with 1019 elements
+Added data of date: 2017-02-10
+Returned list of trains with 840 elements
+Added data of date: 2017-02-11
+Returned list of trains with 734 elements
+Added data of date: 2017-02-12
+Returned list of trains with 1112 elements
+Added data of date: 2017-02-13
+Returned list of trains with 1113 elements
+Added data of date: 2017-02-14
+Returned list of trains with 1108 elements
+Added data of date: 2017-02-15
+Returned list of trains with 1118 elements
+Added data of date: 2017-02-16
+Returned list of trains with 1123 elements
+Added data of date: 2017-02-17
+Returned list of trains with 886 elements
+Added data of date: 2017-02-18
+Returned list of trains with 723 elements
+Added data of date: 2017-02-19
+Returned list of trains with 1114 elements
+Added data of date: 2017-02-20
+Returned list of trains with 1117 elements
+Added data of date: 2017-02-21
+Returned list of trains with 1109 elements
+Added data of date: 2017-02-22
+Returned list of trains with 1117 elements
+Added data of date: 2017-02-23
+Returned list of trains with 1119 elements
+Added data of date: 2017-02-24
+Returned list of trains with 889 elements
+Added data of date: 2017-02-25
+Returned list of trains with 730 elements
+Added data of date: 2017-02-26
+Returned list of trains with 1110 elements
+Added data of date: 2017-02-27
+Returned list of trains with 1126 elements
+Added data of date: 2017-02-28
+Returned list of trains with 1120 elements
+Added data of date: 2017-03-01
+Returned list of trains with 1117 elements
+Added data of date: 2017-03-02
+Returned list of trains with 1129 elements
+Added data of date: 2017-03-03
+Returned list of trains with 888 elements
+Added data of date: 2017-03-04
+Returned list of trains with 730 elements
+Added data of date: 2017-03-05
+Returned list of trains with 1113 elements
+Added data of date: 2017-03-06
+Returned list of trains with 1118 elements
+Added data of date: 2017-03-07
+Returned list of trains with 1111 elements
+Added data of date: 2017-03-08
+Returned list of trains with 1115 elements
+Added data of date: 2017-03-09
+Returned list of trains with 1131 elements
+Added data of date: 2017-03-10
+Returned list of trains with 885 elements
+Added data of date: 2017-03-11
+Returned list of trains with 730 elements
+Added data of date: 2017-03-12
+Returned list of trains with 1102 elements
+Added data of date: 2017-03-13
+Returned list of trains with 1116 elements
+Added data of date: 2017-03-14
+Returned list of trains with 1112 elements
+Added data of date: 2017-03-15
+Returned list of trains with 1120 elements
+Added data of date: 2017-03-16
+Returned list of trains with 1127 elements
+Added data of date: 2017-03-17
+Returned list of trains with 881 elements
+Added data of date: 2017-03-18
+Returned list of trains with 724 elements
+Added data of date: 2017-03-19
+Returned list of trains with 1113 elements
+Added data of date: 2017-03-20
+Returned list of trains with 1118 elements
+Added data of date: 2017-03-21
+Returned list of trains with 1115 elements
+Added data of date: 2017-03-22
+Returned list of trains with 1121 elements
+Added data of date: 2017-03-23
+Returned list of trains with 1123 elements
+Added data of date: 2017-03-24
+Returned list of trains with 887 elements
+Added data of date: 2017-03-25
+Returned list of trains with 693 elements
+Added data of date: 2017-03-26
+Returned list of trains with 1068 elements
+Added data of date: 2017-03-27
+Returned list of trains with 1109 elements
+Added data of date: 2017-03-28
+Returned list of trains with 1113 elements
+Added data of date: 2017-03-29
+Returned list of trains with 1117 elements
+Added data of date: 2017-03-30
+Returned list of trains with 1129 elements
+Added data of date: 2017-03-31
+Returned list of trains with 882 elements
+Added data of date: 2017-04-01
+Returned list of trains with 728 elements
+Added data of date: 2017-04-02
+Returned list of trains with 1109 elements
+Added data of date: 2017-04-03
+Returned list of trains with 1115 elements
+Added data of date: 2017-04-04
+Returned list of trains with 1113 elements
+Added data of date: 2017-04-05
+Returned list of trains with 1118 elements
+Added data of date: 2017-04-06
+Returned list of trains with 1127 elements
+Added data of date: 2017-04-07
+Returned list of trains with 889 elements
+Added data of date: 2017-04-08
+Returned list of trains with 725 elements
+Added data of date: 2017-04-09
+Returned list of trains with 1114 elements
+Added data of date: 2017-04-10
+Returned list of trains with 1113 elements
+Added data of date: 2017-04-11
+Returned list of trains with 1109 elements
+Added data of date: 2017-04-12
+Returned list of trains with 1122 elements
+Added data of date: 2017-04-13
+Returned list of trains with 723 elements
+Added data of date: 2017-04-14
+Returned list of trains with 881 elements
+Added data of date: 2017-04-15
+Returned list of trains with 696 elements
+Added data of date: 2017-04-16
+Returned list of trains with 731 elements
+Added data of date: 2017-04-17
+Returned list of trains with 1117 elements
+Added data of date: 2017-04-18
+Returned list of trains with 1117 elements
+Added data of date: 2017-04-19
+Returned list of trains with 1115 elements
+Added data of date: 2017-04-20
+Returned list of trains with 1124 elements
+Added data of date: 2017-04-21
+Returned list of trains with 883 elements
+Added data of date: 2017-04-22
+Returned list of trains with 721 elements
+Added data of date: 2017-04-23
+Returned list of trains with 1109 elements
+Added data of date: 2017-04-24
+Returned list of trains with 1118 elements
+Added data of date: 2017-04-25
+Returned list of trains with 1066 elements
+Added data of date: 2017-04-26
+Returned list of trains with 1115 elements
+Added data of date: 2017-04-27
+Returned list of trains with 1118 elements
+Added data of date: 2017-04-28
+Returned list of trains with 888 elements
+Added data of date: 2017-04-29
+Returned list of trains with 696 elements
+Added data of date: 2017-04-30
+Returned list of trains with 791 elements
+Added data of date: 2017-05-01
+Returned list of trains with 1117 elements
+Added data of date: 2017-05-02
+Returned list of trains with 1116 elements
+Added data of date: 2017-05-03
+Returned list of trains with 1100 elements
+Added data of date: 2017-05-04
+Returned list of trains with 1110 elements
+Added data of date: 2017-05-05
+Returned list of trains with 877 elements
+Added data of date: 2017-05-06
+Returned list of trains with 718 elements
+Added data of date: 2017-05-07
+Returned list of trains with 1095 elements
+Added data of date: 2017-05-08
+Returned list of trains with 1083 elements
+Added data of date: 2017-05-09
+Returned list of trains with 1081 elements
+Added data of date: 2017-05-10
+Returned list of trains with 1120 elements
+Added data of date: 2017-05-11
+Returned list of trains with 1119 elements
+Added data of date: 2017-05-12
+Returned list of trains with 879 elements
+Added data of date: 2017-05-13
+Returned list of trains with 722 elements
+Added data of date: 2017-05-14
+Returned list of trains with 1111 elements
+Added data of date: 2017-05-15
+Returned list of trains with 1112 elements
+Added data of date: 2017-05-16
+Returned list of trains with 1116 elements
+Added data of date: 2017-05-17
+Returned list of trains with 1105 elements
+Added data of date: 2017-05-18
+Returned list of trains with 1055 elements
+Added data of date: 2017-05-19
+Returned list of trains with 866 elements
+Added data of date: 2017-05-20
+Returned list of trains with 723 elements
+Added data of date: 2017-05-21
+Returned list of trains with 1111 elements
+Added data of date: 2017-05-22
+Returned list of trains with 1114 elements
+Added data of date: 2017-05-23
+Returned list of trains with 1114 elements
+Added data of date: 2017-05-24
+Returned list of trains with 725 elements
+Added data of date: 2017-05-25
+Returned list of trains with 1118 elements
+Added data of date: 2017-05-26
+Returned list of trains with 876 elements
+Added data of date: 2017-05-27
+Returned list of trains with 727 elements
+Added data of date: 2017-05-28
+Returned list of trains with 1107 elements
+Added data of date: 2017-05-29
+Returned list of trains with 1122 elements
+Added data of date: 2017-05-30
+Returned list of trains with 1115 elements
+Added data of date: 2017-05-31
+Returned list of trains with 1097 elements
+Added data of date: 2017-06-01
+Returned list of trains with 1121 elements
+Added data of date: 2017-06-02
+Returned list of trains with 880 elements
+Added data of date: 2017-06-03
+Returned list of trains with 723 elements
+Added data of date: 2017-06-04
+Returned list of trains with 1056 elements
+Added data of date: 2017-06-05
+Returned list of trains with 1114 elements
+Added data of date: 2017-06-06
+Returned list of trains with 1107 elements
+Added data of date: 2017-06-07
+Returned list of trains with 1113 elements
+Added data of date: 2017-06-08
+Returned list of trains with 1117 elements
+Added data of date: 2017-06-09
+Returned list of trains with 927 elements
+Added data of date: 2017-06-10
+Returned list of trains with 740 elements
+Added data of date: 2017-06-11
+Returned list of trains with 1106 elements
+Added data of date: 2017-06-12
+Returned list of trains with 1110 elements
+Added data of date: 2017-06-13
+Returned list of trains with 1116 elements
+Added data of date: 2017-06-14
+Returned list of trains with 1082 elements
+Added data of date: 2017-06-15
+Returned list of trains with 1120 elements
+Added data of date: 2017-06-16
+Returned list of trains with 883 elements
+Added data of date: 2017-06-17
+Returned list of trains with 731 elements
+Added data of date: 2017-06-18
+Returned list of trains with 1095 elements
+Added data of date: 2017-06-19
+Returned list of trains with 1106 elements
+Added data of date: 2017-06-20
+Returned list of trains with 1092 elements
+Added data of date: 2017-06-21
+Returned list of trains with 1113 elements
+Added data of date: 2017-06-22
+Returned list of trains with 842 elements
+Added data of date: 2017-06-23
+Returned list of trains with 630 elements
+Added data of date: 2017-06-24
+Returned list of trains with 711 elements
+Added data of date: 2017-06-25
+Returned list of trains with 1089 elements
+Added data of date: 2017-06-26
+Returned list of trains with 1079 elements
+Added data of date: 2017-06-27
+Returned list of trains with 1099 elements
+Added data of date: 2017-06-28
+Returned list of trains with 1097 elements
+Added data of date: 2017-06-29
+Returned list of trains with 1102 elements
+Added data of date: 2017-06-30
+Returned list of trains with 871 elements
+Added data of date: 2017-07-01
+Returned list of trains with 738 elements
+Added data of date: 2017-07-02
+Returned list of trains with 1095 elements
+Added data of date: 2017-07-03
+Returned list of trains with 1100 elements
+Added data of date: 2017-07-04
+Returned list of trains with 1101 elements
+Added data of date: 2017-07-05
+Returned list of trains with 1099 elements
+Added data of date: 2017-07-06
+Returned list of trains with 1099 elements
+Added data of date: 2017-07-07
+Returned list of trains with 873 elements
+Added data of date: 2017-07-08
+Returned list of trains with 696 elements
+Added data of date: 2017-07-09
+Returned list of trains with 1097 elements
+Added data of date: 2017-07-10
+Returned list of trains with 1098 elements
+Added data of date: 2017-07-11
+Returned list of trains with 1098 elements
+Added data of date: 2017-07-12
+Returned list of trains with 1106 elements
+Added data of date: 2017-07-13
+Returned list of trains with 1114 elements
+Added data of date: 2017-07-14
+Returned list of trains with 884 elements
+Added data of date: 2017-07-15
+Returned list of trains with 730 elements
+Added data of date: 2017-07-16
+Returned list of trains with 1097 elements
+Added data of date: 2017-07-17
+Returned list of trains with 1098 elements
+Added data of date: 2017-07-18
+Returned list of trains with 1098 elements
+Added data of date: 2017-07-19
+Returned list of trains with 1102 elements
+Added data of date: 2017-07-20
+Returned list of trains with 1103 elements
+Added data of date: 2017-07-21
+Returned list of trains with 883 elements
+Added data of date: 2017-07-22
+Returned list of trains with 735 elements
+Added data of date: 2017-07-23
+Returned list of trains with 1093 elements
+Added data of date: 2017-07-24
+Returned list of trains with 1086 elements
+Added data of date: 2017-07-25
+Returned list of trains with 1099 elements
+Added data of date: 2017-07-26
+Returned list of trains with 1064 elements
+Added data of date: 2017-07-27
+Returned list of trains with 1098 elements
+Added data of date: 2017-07-28
+Returned list of trains with 864 elements
+Added data of date: 2017-07-29
+Returned list of trains with 723 elements
+Added data of date: 2017-07-30
+Returned list of trains with 1087 elements
+Added data of date: 2017-07-31
+Returned list of trains with 1093 elements
+Added data of date: 2017-08-01
+Returned list of trains with 1095 elements
+Added data of date: 2017-08-02
+Returned list of trains with 1088 elements
+Added data of date: 2017-08-03
+Returned list of trains with 1112 elements
+Added data of date: 2017-08-04
+Returned list of trains with 870 elements
+Added data of date: 2017-08-05
+Returned list of trains with 734 elements
+Added data of date: 2017-08-06
+Returned list of trains with 1099 elements
+Added data of date: 2017-08-07
+Returned list of trains with 1096 elements
+Added data of date: 2017-08-08
+Returned list of trains with 1100 elements
+Added data of date: 2017-08-09
+Returned list of trains with 1092 elements
+Added data of date: 2017-08-10
+Returned list of trains with 1106 elements
+Added data of date: 2017-08-11
+Returned list of trains with 836 elements
+Added data of date: 2017-08-12
+Returned list of trains with 706 elements
+Added data of date: 2017-08-13
+Returned list of trains with 888 elements
+Added data of date: 2017-08-14
+Returned list of trains with 12 elements
+Added data of date: 2017-08-15
+Returned list of trains with 1113 elements
+Added data of date: 2017-08-16
+Returned list of trains with 1101 elements
+Added data of date: 2017-08-17
+Returned list of trains with 1101 elements
+Added data of date: 2017-08-18
+Returned list of trains with 888 elements
+Added data of date: 2017-08-19
+Returned list of trains with 783 elements
+Added data of date: 2017-08-20
+Returned list of trains with 1103 elements
+Added data of date: 2017-08-21
+Returned list of trains with 1108 elements
+Added data of date: 2017-08-22
+Returned list of trains with 1110 elements
+Added data of date: 2017-08-23
+Returned list of trains with 1101 elements
+Added data of date: 2017-08-24
+Returned list of trains with 1131 elements
+Added data of date: 2017-08-25
+Returned list of trains with 894 elements
+Added data of date: 2017-08-26
+Returned list of trains with 777 elements
+Added data of date: 2017-08-27
+Returned list of trains with 1105 elements
+Added data of date: 2017-08-28
+Returned list of trains with 1105 elements
+Added data of date: 2017-08-29
+Returned list of trains with 1103 elements
+Added data of date: 2017-08-30
+Returned list of trains with 1103 elements
+Added data of date: 2017-08-31
+Returned list of trains with 1115 elements
+Added data of date: 2017-09-01
+Returned list of trains with 889 elements
+Added data of date: 2017-09-02
+Returned list of trains with 778 elements
+Added data of date: 2017-09-03
+Returned list of trains with 1101 elements
+Added data of date: 2017-09-04
+Returned list of trains with 1105 elements
+Added data of date: 2017-09-05
+Returned list of trains with 1089 elements
+Added data of date: 2017-09-06
+Returned list of trains with 1104 elements
+Added data of date: 2017-09-07
+Returned list of trains with 1112 elements
+Added data of date: 2017-09-08
+Returned list of trains with 886 elements
+Added data of date: 2017-09-09
+Returned list of trains with 777 elements
+Added data of date: 2017-09-10
+Returned list of trains with 1103 elements
+Added data of date: 2017-09-11
+Returned list of trains with 1100 elements
+Added data of date: 2017-09-12
+Returned list of trains with 1106 elements
+Added data of date: 2017-09-13
+Returned list of trains with 1106 elements
+Added data of date: 2017-09-14
+Returned list of trains with 1114 elements
+Added data of date: 2017-09-15
+Returned list of trains with 889 elements
+Added data of date: 2017-09-16
+Returned list of trains with 770 elements
+Added data of date: 2017-09-17
+Returned list of trains with 1104 elements
+Added data of date: 2017-09-18
+Returned list of trains with 1105 elements
+Added data of date: 2017-09-19
+Returned list of trains with 1112 elements
+Added data of date: 2017-09-20
+Returned list of trains with 1112 elements
+Added data of date: 2017-09-21
+Returned list of trains with 1109 elements
+Added data of date: 2017-09-22
+Returned list of trains with 891 elements
+Added data of date: 2017-09-23
+Returned list of trains with 776 elements
+Added data of date: 2017-09-24
+Returned list of trains with 1104 elements
+Added data of date: 2017-09-25
+Returned list of trains with 1105 elements
+Added data of date: 2017-09-26
+Returned list of trains with 1108 elements
+Added data of date: 2017-09-27
+Returned list of trains with 1093 elements
+Added data of date: 2017-09-28
+Returned list of trains with 1091 elements
+Added data of date: 2017-09-29
+Returned list of trains with 895 elements
+Added data of date: 2017-09-30
+Returned list of trains with 779 elements
+Added data of date: 2017-10-01
+Returned list of trains with 1110 elements
+Added data of date: 2017-10-02
+Returned list of trains with 1101 elements
+Added data of date: 2017-10-03
+Returned list of trains with 1110 elements
+Added data of date: 2017-10-04
+Returned list of trains with 1106 elements
+Added data of date: 2017-10-05
+Returned list of trains with 1117 elements
+Added data of date: 2017-10-06
+Returned list of trains with 902 elements
+Added data of date: 2017-10-07

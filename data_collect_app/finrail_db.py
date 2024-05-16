@@ -4,8 +4,10 @@ import pandas as pd
 import re
 import requests
 from sqlalchemy import (create_engine, Column, Integer, VARCHAR, DATE, 
-    DATETIME, ForeignKey, Boolean, select, func, FLOAT, text)
-from sqlalchemy.orm import declarative_base, relationship, backref
+    DATETIME, ForeignKey, Boolean, select, func, FLOAT, text,
+    UniqueConstraint)
+from sqlalchemy.orm import (declarative_base, relationship, backref, 
+    sessionmaker)
 
 # Create base class for sqlalchemy class decleration
 Base = declarative_base()
@@ -13,8 +15,7 @@ Base = declarative_base()
 class Train(Base):
     '''Defines class object for table "trains", see ER shema for details'''
     
-    __tablename__ = 'trains'
-    
+    __tablename__ = 'trains'    
     # id
     uid = Column('id', Integer, autoincrement=True, primary_key=True)
     # Store train number
@@ -27,13 +28,18 @@ class Train(Base):
     train_cat = Column('train_cat', VARCHAR(19)) 
     # Store train type, for example "IC"
     train_type = Column('train_type', VARCHAR(3)) 
+    # Define combination of date and train number as unique (as they are
+    # in the reality of a traffic company)
+    __table_args__ = (
+        UniqueConstraint(train_number, dep_date, name='trains_unique'),
+    )
     
 
 class Journey_Section(Base):
-    '''Defines class object for table "journey_section", see ER shema for details'''
+    '''Defines class object for table "journey_section", see ER shema for 
+    details'''
     
-    __tablename__ = 'journey_section'
-    
+    __tablename__ = 'journey_section'    
     # id
     uid = Column('id', Integer, autoincrement=True, primary_key=True) 
     # id of corresponding data in "trains"
@@ -63,8 +69,7 @@ class Journey_Section(Base):
 class Wagon(Base):
     '''Defines class object for table "wagon", see ER shema for details'''
     
-    __tablename__ = 'wagon'
-    
+    __tablename__ = 'wagon'    
     # id
     uid = Column('id', Integer, autoincrement=True, primary_key=True) 
     # id of corresponding journey section
@@ -125,8 +130,7 @@ class Wagon(Base):
 class Locomotive(Base):
     '''Defines class object for table "locomotive", see ER shema for details'''
     
-    __tablename__ = 'locomotive'
-    
+    __tablename__ = 'locomotive'    
     # id
     uid = Column('id', Integer, autoincrement=True, primary_key=True) 
     # id of corresponding journey section
@@ -152,8 +156,7 @@ class Timeseries(Base):
     aggregated data, that holds timeseries of total wagon length in its 
     columns.'''
     
-    __tablename__ = 'timeseries' 
-    
+    __tablename__ = 'timeseries'     
     # id
     uid = Column('id', Integer, autoincrement=True, primary_key=True) 
     # Column holding the information about the date (daily timeseries)
@@ -169,9 +172,11 @@ def create_tables(db_str):
     Parameter:
         db_str <str> String defining a database connection
     Returns: 
-        <sqlalchey database engine> Engine to database specified in db_str
+        None
+        #<sqlalchey database engine> Engine to database specified in db_str
         '''
-    engine = create_engine(db_str) # Create engine
+    # Create engine
+    engine = create_engine(db_str, pool_size=1, pool_recycle=100)
     Base.metadata.create_all(engine) # Create all tables
     return engine
 
@@ -298,20 +303,23 @@ def dates_between(date_end, date_start=dt.date(2015, 12, 12)):
         yield date_start
         date_start += dt.timedelta(days=1)
     
-def add_compositions(s, date_end=dt.date.today(), verbose=0):
+def add_compositions(engine, date_end=dt.date.today(), verbose=0):
     '''Function will collect date of latest entries in finrail database. With 
     this information, it will fill up the database with the data from the 
     rata.digitraffic.fi API for train compositions up to date_end (exclusive).
     
     Parameter: 
-        s <sqlalchemy session instance> database session to work on
+        engine <sqlalchemy engine> database engine to work on
         date_end <datetime.date> Last day to collect data from. 
             Defaults to datetime.date.today()
         verbose: set to > 0 to obtain status information while processing data
     '''
+    # Sessionmaker to create instances of Session later in this function
+    Session = sessionmaker(engine)
     # Query for latest date in database
     try:
-        latest_date = s.query(func.max(Train.dep_date)).scalar()
+        with Session() as s:
+            latest_date = s.query(func.max(Train.dep_date)).scalar()
     except:
         print('Table "train" in finrail database is not accessible, in \
             "Query date". Set date to default')
@@ -337,16 +345,17 @@ def add_compositions(s, date_end=dt.date.today(), verbose=0):
         except:
             raise
         # Handle errors from requesting API
-        if r.status_code != 200: 
+        if r.status_code != 200:
             print(
                 f'Source API answered with error code: {r.status_code}'
             )
             return None
         else:
-            try:
+            try:   
                 # Extract data from answer of API and store in database
-                s.add_all(trains_json_to_train_list(r))
-                s.commit()
+                new_data = trains_json_to_train_list(r)
+                with Session() as s, s.begin():
+                    s.add_all(new_data)
             except:
                 # Handle errors that occured from accessing database
                 print('finrail database is not accessible. In "Adding data"')
@@ -382,19 +391,20 @@ def tweak_train(df_):
     .ffill(axis=0) 
     )
 
-def update_timeseries(s, engine, path_query):
+def update_timeseries(engine, path_query):
     '''Function will read information from tables "train", "journey_section" 
     and "wagon" in database and will aggregate it to obtain timeseries. These 
     timeseries will be stored in table "timeseries" in database.
 
     Parameter:
-        s <sqlalchemy session instance> Session to database to read/write from
         engine <sqlalchemy engine object> Engine of database to read/write from
         path_query <path object> Path to the file containing the text of the 
             sql query
 
     Return: None
     '''
+    # sessionmaker to create instances of Session later in this function
+    Session = sessionmaker(engine)
     # Query for sql database is stored in file. Read it
     with open(path_query, 'r') as w:
         sql_query_str = w.read()
@@ -429,10 +439,11 @@ def update_timeseries(s, engine, path_query):
     
     # Read out latest time stored in database table "timeseries"
     try:
-        latest_db_date = s.query(func.max(Timeseries.date)).scalar()
-        # If reading is impossible set date to default
-        if latest_db_date == None:
-            latest_db_date = dt.date(1900, 1, 1)
+        with Session() as s:
+            latest_db_date = s.query(func.max(Timeseries.date)).scalar()
+            # If reading is impossible set date to default
+            if latest_db_date == None:
+                latest_db_date = dt.date(1900, 1, 1)
     except:
         print('Error while quering table "timeseries"')
         raise
@@ -452,6 +463,6 @@ def update_timeseries(s, engine, path_query):
         new_timesteps.append(timestep)
 
     # Add and commit new entries to database
-    s.add_all(new_timesteps)
-    s.commit()
+    with Session() as s, s.begin():
+        s.add_all(new_timesteps)
     return None
