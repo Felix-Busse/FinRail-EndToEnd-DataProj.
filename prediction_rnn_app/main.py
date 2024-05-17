@@ -81,11 +81,30 @@ app = FastAPI()
 # Define endpoint for delivery of time series prediction of commuter services
 @app.get('/prediction/commuter/')
 async def prediction_commuter():
-    '''Function responses with JSON format answer, containing dates and values
-    of 14-day prediction of time series "commuter". Prediction is obtained by 
-    multistep-ahead-prediction (in contrast to one-step-head-prediction).
-    Additional information is given in JSON answer. See swagger documentation
-    for details.
+    '''<p>Function responses with JSON format answer, containing dates and
+    values of 14-day prediction of time series "commuter". <br>Prediction is
+    obtained by multistep-ahead-prediction (in contrast to
+    one-step-head-prediction).</p><br>
+    Structure of JSON response:\n
+        {
+            'prediction': {
+                'name': <str> Name of time series, 
+                'day_count': <int> Number of days in prediction horizon,
+                'start_day': <str> Date of first predicted time step,
+                'end_day': <str> Date of last predicted time step,
+                'prediction_type': <str> Tells whether prediction is  
+                    "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error
+                    margins,
+                'days': (list with as many entry as predicted time steps) [
+                    {
+                        'date': <str> Date of predicted time step,
+                        'value': <float> Value of predicted time series at this
+                            time step
+                    }
+                ] 
+            }
+        }
     '''
     # Load trained model for this purpose
     try:
@@ -141,7 +160,7 @@ async def prediction_commuter():
     days = [
         {
             'date': str(date), 
-            'value': str(val)
+            'value': round(float(val), 2)
         }
         for i, (date, val) in enumerate(zip(dates, prediction))
     ]
@@ -162,11 +181,30 @@ async def prediction_commuter():
 # services
 @app.get('/prediction/long_distance/')
 async def prediction_long_distance():
-    '''Function responses with JSON format answer, containing dates and values 
-    of 14-day prediction of time series "long_distance". Prediction is obtained
-    by multistep-ahead-prediction (in contrast to one-step-head-prediction).
-    Additional information is given in JSON answer. See swagger documentation 
-    for details.
+    '''<p>Function responses with JSON format answer, containing dates and
+    values of 14-day prediction of time series "long_distasnce". <br>Prediction 
+    is obtained by multistep-ahead-prediction (in contrast to
+    one-step-head-prediction).</p><br>
+    Structure of JSON response:\n
+        {
+            'prediction': {
+                'name': <str> Name of time series, 
+                'day_count': <int> Number of days in prediction horizon,
+                'start_day': <str> Date of first predicted time step,
+                'end_day': <str> Date of last predicted time step,
+                'prediction_type': <str> Tells whether prediction is  
+                    "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error
+                    margins,
+                'days': (list with as many entry as predicted time steps) [
+                    {
+                        'date': <str> Date of predicted time step,
+                        'value': <float> Value of predicted time series at this
+                            time step
+                    }
+                ] 
+            }
+        }
     '''
     # Load trained model for this purpose
     try:
@@ -222,7 +260,7 @@ async def prediction_long_distance():
     days = [
         {
             'date': str(date),
-            'value': str(val)
+            'value': round(float(val), 2)
         }
         for i, (date, val) in enumerate(zip(dates, prediction))
     ]
@@ -242,13 +280,36 @@ async def prediction_long_distance():
 # Define endpoint for delivery of time series prediction of long_distance 
 # services with errors
 @app.get('/prediction/long_distance_w_error/')
-async def prediction_long_distance_w_error():
-    '''Function responses with JSON format answer, containing dates and values 
-    of 14-day prediction of time series "long_distance". Prediction is obtained
-    by one-step-ahead-prediction (in contrast to multistep-head-prediction). 
-    Bootstrapping of residuals is used to provide error margins as well.
-    Additional information is given in JSON answer. See swagger documentation 
-    for details.
+async def prediction_long_distance_w_error(alpha: float=0.95):
+    '''<p>Function responses with JSON format answer, containing dates and
+    values of 14-day prediction of time series "long_distance". <br>Prediction 
+    is obtained by multistep-ahead-prediction (in contrast to
+    one-step-head-prediction). Errors are provided. </p><br>
+    Structure of JSON response:\n
+        {
+            'prediction': {
+                'name': <str> Name of time series, 
+                'day_count': <int> Number of days in prediction horizon,
+                'start_day': <str> Date of first predicted time step,
+                'end_day': <str> Date of last predicted time step,
+                'prediction_type': <str> Tells whether prediction is  
+                    "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error
+                    margins,
+                'alpha': <float> Values 0 to 1, defines error margins
+                'days': (list with as many entry as predicted time steps) [
+                    {
+                        'date': <str> Date of predicted time step,
+                        'value': <float> Value of predicted time series at this
+                            time step
+                        'error_lower_limit' <float> Lower limit of error 
+                            interval, as to parameter alpha
+                        'error_upper_limit' <float> Upper limit of error 
+                            interval, as to parameter alpha
+                    }
+                ] 
+            }
+        }
     '''
     # Load trained model for this purpose
     try:
@@ -305,14 +366,14 @@ async def prediction_long_distance_w_error():
     # Predict next 14 days of time series
     df_pred = finrail_rnn_model.predict_with_errors(model, data_test, 
         df[['date', 'long_distance', 'next_day_H', 'next_day_S', 
-        'next_day_W']], bootstrap_size=100)
+        'next_day_W']], bootstrap_size=100, alpha=alpha)
     # Assembling response
     days = [
         {
             'date': str(date.date()), 
-            'value': str(val),
-            'error_lower_limit': str(lower_lim),
-            'error_upper_limit': str(upper_lim)
+            'value': round(float(val), 2),
+            'error_lower_limit': round(float(lower_lim), 2),
+            'error_upper_limit': round(float(upper_lim), 2)
         } 
         for i, (date, val, lower_lim, upper_lim)
         in enumerate(zip(df_pred.date, df_pred.one_step_ahead, 
@@ -327,6 +388,7 @@ async def prediction_long_distance_w_error():
             'end_day': str(df_pred.date.iloc[-1].date()),
             'prediction_type': 'one-step-ahead',
             'error_provided': True,
+            'alpha': alpha,
             'days': days
         }
     }
@@ -334,13 +396,36 @@ async def prediction_long_distance_w_error():
 # Define endpoint for delivery of time series prediction of commuter services 
 # with errors
 @app.get('/prediction/commuter_w_error/')
-async def prediction_commuter_w_error():
-    '''Function responses with JSON format answer, containing dates and values
-    of 14-day prediction of time series "commuter". Prediction is obtained by 
-    one-step-ahead-prediction (in contrast to multistep-head-prediction). 
-    Bootstrapping of residuals is used to provide error margins as well.
-    Additional information is given in JSON answer. See swagger documentation 
-    for details.
+async def prediction_commuter_w_error(alpha: float=0.95):
+    '''<p>Function responses with JSON format answer, containing dates and
+    values of 14-day prediction of time series "commuter". <br>Prediction 
+    is obtained by multistep-ahead-prediction (in contrast to
+    one-step-head-prediction). Errors are provided. </p><br>
+    Structure of JSON response:\n
+        {
+            'prediction': {
+                'name': <str> Name of time series, 
+                'day_count': <int> Number of days in prediction horizon,
+                'start_day': <str> Date of first predicted time step,
+                'end_day': <str> Date of last predicted time step,
+                'prediction_type': <str> Tells whether prediction is  
+                    "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error
+                    margins,
+                'alpha': <float> Values 0 to 1, defines error margins
+                'days': (list with as many entry as predicted time steps) [
+                    {
+                        'date': <str> Date of predicted time step,
+                        'value': <float> Value of predicted time series at this
+                            time step
+                        'error_lower_limit' <float> Lower limit of error 
+                            interval, as to parameter alpha
+                        'error_upper_limit' <float> Upper limit of error 
+                            interval, as to parameter alpha
+                    }
+                ] 
+            }
+        }
     '''
     # Load trained model for this purpose
     try:
@@ -394,14 +479,14 @@ async def prediction_commuter_w_error():
     # Predict next 14 days of time series
     df_pred = finrail_rnn_model.predict_with_errors(model, data_test, 
         df[['date', 'commuter', 'next_day_H', 'next_day_S', 'next_day_W']],
-        bootstrap_size=100)
+        bootstrap_size=100, alpha=alpha)
     # Assembling response
     days = [
         {
             'date': str(date.date()), 
-            'value': str(val),
-            'error_lower_limit': str(lower_lim),
-            'error_upper_limit': str(upper_lim)
+            'value': round(float(val), 2),
+            'error_lower_limit': round(float(lower_lim), 2),
+            'error_upper_limit': round(float(upper_lim), 2)
         } 
         for i, (date, val, lower_lim, upper_lim) 
         in enumerate(zip(df_pred.date, df_pred.one_step_ahead, 
@@ -416,6 +501,7 @@ async def prediction_commuter_w_error():
             'end_day': str(df_pred.date.iloc[-1].date()),
             'prediction_type': 'one-step-ahead',
             'error_provided': True,
+            'alpha': alpha,
             'days': days
         }
     }

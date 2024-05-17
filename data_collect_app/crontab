@@ -1,1 +1,1 @@
-16 * * * * python3 /app/cron/main.py
+0 * * * * python3 /app/cron/main.py

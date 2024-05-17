@@ -176,7 +176,7 @@ def create_tables(db_str):
         #<sqlalchey database engine> Engine to database specified in db_str
         '''
     # Create engine
-    engine = create_engine(db_str, pool_size=1, pool_recycle=100)
+    engine = create_engine(db_str)
     Base.metadata.create_all(engine) # Create all tables
     return engine
 
