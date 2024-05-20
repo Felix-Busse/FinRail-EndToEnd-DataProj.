@@ -1,10 +1,12 @@
 import datetime as dt
 import numpy as np
+import os
 import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.exc import ProgrammingError
 from tensorflow import (cast, reduce_sum, size, float32, transpose, concat, 
     expand_dims, TensorSpec)
+from tensorflow.keras import models
 from tensorflow.data import AUTOTUNE, Dataset
 from tensorflow.keras.metrics import Metric
 from tensorflow.math import square, sqrt
@@ -458,3 +460,51 @@ def predict_with_errors(model, data_test, df_, bootstrap_size=10, alpha=0.95):
             pd.DataFrame(sequence_pred, columns=['14_days_ahead'])
         ], axis=1
     )
+
+def load_from_subdirectory(filename, sub_dir_path_list=[]):
+    '''Function reads back file passed to function. Subdirectory may be 
+    specified.
+
+    Parameters:
+        filename <str> Name of file to read from.
+        sub_dir_path_list <list of str> List with strings defining a 
+            subdirectory from where to read file.
+
+    Returns:
+        <str> Content of file.
+    '''
+    # Concatenate lists to represent complete path to file and join list to 
+    # final file path
+    path_list = sub_dir_path_list + [filename]
+    path = os.path.join(*path_list)
+    # Do the reading from 
+    try:
+        with open(path, 'r') as f:
+            return f.read()
+    except:
+        raise IOError('Could not load file from subdirectory.')
+
+def load_tensorflow_model(filename, sub_dir_path_list=[], 
+    custom_objects={'Custom_Metric': Custom_Metric}):
+    '''Function loads tensorflow.keras model. Custom objects of model and 
+    subdirectory file path may be specified.
+
+    Parameters:
+        filename <str> Name of model file
+        sub_dir_path_list <list of str> List with strings defining a
+            subdirectory from where to read model.
+        custom_objects <dict> Dictionary 'key': Class passed to 
+            tf.keras.models.load_model() to define custom objects in model 
+            definition
+    
+    Returns:
+        <tf.keras.model> Model loaded from file.
+    '''
+    # Concatenate lists to represent complete path to model and join list to 
+    # final file path
+    path_list = [os.getcwd()] + sub_dir_path_list + [filename]
+    path = os.path.join(*path_list)
+    try:
+        return models.load_model(path, custom_objects=custom_objects)
+    except:
+        raise IOError('Could not load tf.keras model.')

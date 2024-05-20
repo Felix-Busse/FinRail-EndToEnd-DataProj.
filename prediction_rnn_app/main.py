@@ -27,59 +27,81 @@ app_dir_parts = re.split(os.path.sep, app_dir)
 # Add leading path seperator, as this is absolute path
 app_dir_parts = [os.path.sep] + app_dir_parts
 
-def load_from_subdirectory(filename, sub_dir_path_list=[]):
-    '''Function reads back file passed to function. Subdirectory may be 
-    specified.
+# Create string for app description (metadata)
+description = '''
+***
+<br>
+## Measures
+As a measure for **workload** of rail services, the sum of the length
+of all passengers trains provided per day is used. This measure is considered 
+appropriate, as it will increase when more trains are running in the network, 
+but as well, when trains with more wagons are used. Thus reflecting both 
+factors for stress for rail services: 
+- **High usage** of rail network infrastructure
+- **Small reserves** of rolling stock
 
-    Parameters:
-        filename <str> Name of file to read from.
-        sub_dir_path_list <list of str> List with strings defining a 
-            subdirectory from where to read file.
+As business case of **commuter trains** differs significantly from those of 
+**long-distance trains**, these cases are treated separately. Two APIs are
+provided for each case. Use these to obtain timeseries prediction with or 
+without error margins. <br><br>
+## Model
+Sequentially trained LSTM <br><br>
+## Data
+Data of train compositions from [Fintraffic](https://www.digitraffic.fi/en/)
+is used and aggregated.
+'''
 
-    Returns:
-        <str> Content of file.
-    '''
-    # Concatenate lists to represent complete path to file and join list to 
-    # final file path
-    path_list = sub_dir_path_list + [filename]
-    path = os.path.join(*path_list)
-    # Do the reading from 
-    try:
-        with open(path, 'r') as f:
-            return f.read()
-    except:
-        raise IOError('Could not load file from subdirectory.')
+# Create string for app summary (metadata)
+summary = '''
+Finrail Timeseries Prediction provides 14-day-ahead preditions for workload
+of finnish passenger rail services.
+'''
+# Create dictionary with metadata for documentation side
+metadata = {
+    'title': 'Finrail Timeseries Prediction',
+    'description': description,
+    'summary': summary,
+    'contact': {
+        'name': 'Felix Busse', 
+        'url': 'https://www.github.com/Felix-Busse',
+        'email': 'f.busse@posteo.de'
+    },
+    'version': '1.0.0',
+    'license_info': {
+        'name': 'GNU General Public License',
+        'url': 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+    }
+}
 
-def load_tensorflow_model(filename, sub_dir_path_list=[], 
-    custom_objects={'Custom_Metric': finrail_rnn_model.Custom_Metric}):
-    '''Function loads tensorflow.keras model. Custom objects of model and 
-    subdirectory file path may be specified.
-
-    Parameters:
-        filename <str> Name of model file
-        sub_dir_path_list <list of str> List with strings defining a
-            subdirectory from where to read model.
-        custom_objects <dict> Dictionary 'key': Class passed to 
-            tf.keras.models.load_model() to define custom objects in model 
-            definition
-    
-    Returns:
-        <tf.keras.model> Model loaded from file.
-    '''
-    # Concatenate lists to represent complete path to model and join list to 
-    # final file path
-    path_list = [os.getcwd()] + sub_dir_path_list + [filename]
-    path = os.path.join(*path_list)
-    try:
-        return models.load_model(path, custom_objects=custom_objects)
-    except:
-        raise IOError('Could not load tf.keras model.')
+#Create metadata for tags (topics of endpoints in swagger page)
+tags_metadata = [
+    {
+        'name': 'Commuter',
+        'description': '''Prediction of total 
+            train composition length for next 14 day.'''
+    },
+    {
+        'name': 'Commuter, with error',
+        'description': '''Prediction of total train composition length
+            for next 14 day. Error margin of prediction is provided.'''
+    },    
+    {
+        'name': 'Long-distance',
+        'description': '''Prediction of total train composition length
+            for next 14 day.'''
+    },
+    {
+        'name': '''Long-distance, with error''',
+        'description': '''Prediction of total train composition length
+            for next 14 day. Error margin of prediction is provided.'''
+    }
+]
 
 # Create FastAPI instance
-app = FastAPI()
+app = FastAPI(**metadata, openapi_tags=tags_metadata)
 
 # Define endpoint for delivery of time series prediction of commuter services
-@app.get('/prediction/commuter/')
+@app.get('/prediction/commuter/', tags=['Commuter'])
 async def prediction_commuter():
     '''<p>Function responses with JSON format answer, containing dates and
     values of 14-day prediction of time series "commuter". <br>Prediction is
@@ -92,15 +114,12 @@ async def prediction_commuter():
                 'day_count': <int> Number of days in prediction horizon,
                 'start_day': <str> Date of first predicted time step,
                 'end_day': <str> Date of last predicted time step,
-                'prediction_type': <str> Tells whether prediction is  
-                    "multistep-ahead" or "one-step-ahead" type,
-                'error_provided': <Bool> Tells whether prediction includes error
-                    margins,
+                'prediction_type': <str> Tells whether prediction is "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error margins,
                 'days': (list with as many entry as predicted time steps) [
                     {
                         'date': <str> Date of predicted time step,
-                        'value': <float> Value of predicted time series at this
-                            time step
+                        'value': <float> Value of predicted time series at this time step
                     }
                 ] 
             }
@@ -108,7 +127,9 @@ async def prediction_commuter():
     '''
     # Load trained model for this purpose
     try:
-        model = load_tensorflow_model('rnn_commuter.keras', app_dir_parts)
+        model = finrail_rnn_model.load_tensorflow_model(
+            'rnn_commuter.keras', app_dir_parts
+        )
     except IOError as err:
         # Print error to terminal
         print(*err.args) 
@@ -116,7 +137,7 @@ async def prediction_commuter():
         return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
     try:
-        sql_query = load_from_subdirectory(
+        sql_query = finrail_rnn_model.load_from_subdirectory(
             'timeseries_query.txt', app_dir_parts
         )
     except IOError as err:
@@ -153,9 +174,10 @@ async def prediction_commuter():
     # only last 21 days.
     df = finrail_rnn_model.tweak_timeseries(df).iloc[-21:, :]
     # Predict next 14 days of time series
-    dates, prediction = finrail_rnn_model.simple_sequence_pred(model, 
-        df[['date', 'commuter', 'next_day_H', 'next_day_S', 
-        'next_day_W']])
+    dates, prediction = finrail_rnn_model.simple_sequence_pred(
+        model, df[['date', 'commuter', 'next_day_H', 'next_day_S', 
+        'next_day_W']]
+    )
     # Assembling response
     days = [
         {
@@ -177,12 +199,126 @@ async def prediction_commuter():
         }   
     }
 
+# Define endpoint for delivery of time series prediction of commuter services 
+# with errors
+@app.get('/prediction/commuter_incl_error/', tags=['Commuter, with error'])
+async def prediction_commuter_incl_error(alpha: float=0.95):
+    '''<p>Function responses with JSON format answer, containing dates and
+    values of 14-day prediction of time series "commuter". <br>Prediction 
+    is obtained by multistep-ahead-prediction (in contrast to
+    one-step-head-prediction). Errors are provided. </p><br>
+    Structure of JSON response:\n
+        {
+            'prediction': {
+                'name': <str> Name of time series, 
+                'day_count': <int> Number of days in prediction horizon,
+                'start_day': <str> Date of first predicted time step,
+                'end_day': <str> Date of last predicted time step,
+                'prediction_type': <str> Tells whether prediction is "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error margins,
+                'alpha': <float> Values 0 to 1, defines error margins,
+                'days': (list with as many entry as predicted time steps) [
+                    {
+                        'date': <str> Date of predicted time step,
+                        'value': <float> Value of predicted time series at this time step
+                        'error_lower_limit' <float> Lower limit of error interval, as to parameter alpha
+                        'error_upper_limit' <float> Upper limit of error interval, as to parameter alpha
+                    }
+                ] 
+            }
+        }
+    '''
+    # Load trained model for this purpose
+    try:
+        model = finrail_rnn_model.load_tensorflow_model(
+            'rnn_commuter.keras', app_dir_parts
+        )
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args)
+        # Display error in response of API
+        return {'Error': err.args} 
+    # Load sql query to load time series up to newest date available
+    try:
+        sql_query = finrail_rnn_model.load_from_subdirectory(
+            'timeseries_query.txt', app_dir_parts
+        )
+    except IOError as err:
+        # Print error to terminal
+        print(*err.args) 
+        # Display error in response of API
+        return {'Error': err.args} 
+    # Load time series from database
+    try:
+        df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
+            str_query=sql_query)
+    except ProgrammingError as err:
+        print(*err.args) # Print error to terminal
+        return {'Error': err.args} # Display error in response of API
+    except:
+        # Print error to terminal
+        print('Could not load time series from database. Check database '
+            'server.')
+         # Display error in response of API
+        return {
+            'Error': 'Could not load time series from database. Check '
+            'database server.'
+        }
+    # Check, whether enough data is present to make predictions
+    if df.index.size < 21:
+        return {
+            'Error': 'Not enough time steps in database to start prediction. '
+            'Database must hold at least 21 time steps for reasonable '
+            'predictions'
+        }
+    # Use tweak-function to process DataFrame and add one-hot-encodings, keep 
+    # only last 21 days.
+    df = finrail_rnn_model.tweak_timeseries(df)
+    # Set up test data set, as it is needed to calculate residuals, which are 
+    # needed for bootstrapping
+    data_test = finrail_rnn_model.prepare_training_dataset(
+        df, ['commuter', 'next_day_H', 'next_day_S', 'next_day_W'], 
+        (2942, None), batch_size=500, reshuffle_each_iteration=False, 
+        seq_length=21
+    )
+    # Predict next 14 days of time series
+    df_pred = finrail_rnn_model.predict_with_errors(
+        model, data_test, 
+        df[['date', 'commuter', 'next_day_H', 'next_day_S', 'next_day_W']],
+        bootstrap_size=100, alpha=alpha
+    )
+    # Assembling response
+    days = [
+        {
+            'date': str(date.date()), 
+            'value': round(float(val), 2),
+            'error_lower_limit': round(float(lower_lim), 2),
+            'error_upper_limit': round(float(upper_lim), 2)
+        } 
+        for i, (date, val, lower_lim, upper_lim) 
+        in enumerate(zip(df_pred.date, df_pred.one_step_ahead, 
+        df_pred.iloc[:, 2], df_pred.iloc[:, 3]))
+    ]
+    no_days = len(df_pred.one_step_ahead)
+    return {
+        'prediction': {
+            'name': 'commuter', 
+            'day_count': no_days,
+            'start_day': str(df_pred.date.iloc[0].date()),
+            'end_day': str(df_pred.date.iloc[-1].date()),
+            'prediction_type': 'one-step-ahead',
+            'error_provided': True,
+            'alpha': alpha,
+            'days': days
+        }
+    }
+
 # Define endpoint for delivery of time series prediction of long_distance
 # services
-@app.get('/prediction/long_distance/')
+@app.get('/prediction/long_distance/', tags=['Long-distance'])
 async def prediction_long_distance():
     '''<p>Function responses with JSON format answer, containing dates and
-    values of 14-day prediction of time series "long_distasnce". <br>Prediction 
+    values of 14-day prediction of time series "long_distance". <br>Prediction 
     is obtained by multistep-ahead-prediction (in contrast to
     one-step-head-prediction).</p><br>
     Structure of JSON response:\n
@@ -192,15 +328,12 @@ async def prediction_long_distance():
                 'day_count': <int> Number of days in prediction horizon,
                 'start_day': <str> Date of first predicted time step,
                 'end_day': <str> Date of last predicted time step,
-                'prediction_type': <str> Tells whether prediction is  
-                    "multistep-ahead" or "one-step-ahead" type,
-                'error_provided': <Bool> Tells whether prediction includes error
-                    margins,
+                'prediction_type': <str> Tells whether prediction is "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error margins,
                 'days': (list with as many entry as predicted time steps) [
                     {
                         'date': <str> Date of predicted time step,
-                        'value': <float> Value of predicted time series at this
-                            time step
+                        'value': <float> Value of predicted time series at this time step
                     }
                 ] 
             }
@@ -208,7 +341,9 @@ async def prediction_long_distance():
     '''
     # Load trained model for this purpose
     try:
-        model = load_tensorflow_model('rnn_long_distance.keras', app_dir_parts)
+        model = finrail_rnn_model.load_tensorflow_model(
+            'rnn_long_distance.keras', app_dir_parts
+        )
     except IOError as err:
         # Print error to terminal
         print(*err.args) 
@@ -216,7 +351,7 @@ async def prediction_long_distance():
         return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
     try:
-        sql_query = load_from_subdirectory(
+        sql_query = finrail_rnn_model.load_from_subdirectory(
             'timeseries_query.txt', app_dir_parts
         )
     except IOError as err:
@@ -253,9 +388,10 @@ async def prediction_long_distance():
     # only last 21 days.
     df = finrail_rnn_model.tweak_timeseries(df).iloc[-21:, :]
     # Predict next 14 days of time series
-    dates, prediction = finrail_rnn_model.simple_sequence_pred(model, 
-        df[['date', 'long_distance', 'next_day_H', 'next_day_S', 
-        'next_day_W']])
+    dates, prediction = finrail_rnn_model.simple_sequence_pred(
+        model, df[['date', 'long_distance', 'next_day_H', 'next_day_S', 
+        'next_day_W']]
+    )
     # Assembling response
     days = [
         {
@@ -279,8 +415,10 @@ async def prediction_long_distance():
 
 # Define endpoint for delivery of time series prediction of long_distance 
 # services with errors
-@app.get('/prediction/long_distance_w_error/')
-async def prediction_long_distance_w_error(alpha: float=0.95):
+@app.get(
+    '/prediction/long_distance_incl_error/', tags=['Long-distance, with error']
+)
+async def prediction_long_distance_incl_error(alpha: float=0.95):
     '''<p>Function responses with JSON format answer, containing dates and
     values of 14-day prediction of time series "long_distance". <br>Prediction 
     is obtained by multistep-ahead-prediction (in contrast to
@@ -292,20 +430,15 @@ async def prediction_long_distance_w_error(alpha: float=0.95):
                 'day_count': <int> Number of days in prediction horizon,
                 'start_day': <str> Date of first predicted time step,
                 'end_day': <str> Date of last predicted time step,
-                'prediction_type': <str> Tells whether prediction is  
-                    "multistep-ahead" or "one-step-ahead" type,
-                'error_provided': <Bool> Tells whether prediction includes error
-                    margins,
-                'alpha': <float> Values 0 to 1, defines error margins
+                'prediction_type': <str> Tells whether prediction is "multistep-ahead" or "one-step-ahead" type,
+                'error_provided': <Bool> Tells whether prediction includes error margins,
+                'alpha': <float> Values 0 to 1, defines error margins,
                 'days': (list with as many entry as predicted time steps) [
                     {
                         'date': <str> Date of predicted time step,
-                        'value': <float> Value of predicted time series at this
-                            time step
-                        'error_lower_limit' <float> Lower limit of error 
-                            interval, as to parameter alpha
-                        'error_upper_limit' <float> Upper limit of error 
-                            interval, as to parameter alpha
+                        'value': <float> Value of predicted time series at this time step
+                        'error_lower_limit' <float> Lower limit of error interval, as to parameter alpha
+                        'error_upper_limit' <float> Upper limit of error interval, as to parameter alpha
                     }
                 ] 
             }
@@ -313,7 +446,9 @@ async def prediction_long_distance_w_error(alpha: float=0.95):
     '''
     # Load trained model for this purpose
     try:
-        model = load_tensorflow_model('rnn_long_distance.keras', app_dir_parts)
+        model = finrail_rnn_model.load_tensorflow_model(
+            'rnn_long_distance.keras', app_dir_parts
+        )
     except IOError as err:
         # Print error to terminal
         print(*err.args) 
@@ -321,7 +456,7 @@ async def prediction_long_distance_w_error(alpha: float=0.95):
         return {'Error': err.args} 
     # Load sql query to load time series up to newest date available
     try:
-        sql_query = load_from_subdirectory(
+        sql_query = finrail_rnn_model.load_from_subdirectory(
             'timeseries_query.txt', app_dir_parts
         )
     except IOError as err:
@@ -359,14 +494,17 @@ async def prediction_long_distance_w_error(alpha: float=0.95):
     df = finrail_rnn_model.tweak_timeseries(df)
     # Set up test data set, as it is needed to calculate residuals, which are 
     # needed for bootstrapping
-    data_test = finrail_rnn_model.prepare_training_dataset(df, 
-        ['long_distance', 'next_day_H', 'next_day_S', 'next_day_W'], 
+    data_test = finrail_rnn_model.prepare_training_dataset(
+        df, ['long_distance', 'next_day_H', 'next_day_S', 'next_day_W'], 
         (2942, None), batch_size=500, reshuffle_each_iteration=False, 
-        seq_length=21)
+        seq_length=21
+    )
     # Predict next 14 days of time series
-    df_pred = finrail_rnn_model.predict_with_errors(model, data_test, 
+    df_pred = finrail_rnn_model.predict_with_errors(
+        model, data_test, 
         df[['date', 'long_distance', 'next_day_H', 'next_day_S', 
-        'next_day_W']], bootstrap_size=100, alpha=alpha)
+        'next_day_W']], bootstrap_size=100, alpha=alpha
+    )
     # Assembling response
     days = [
         {
@@ -383,119 +521,6 @@ async def prediction_long_distance_w_error(alpha: float=0.95):
     return {
         'prediction': {
             'name': 'long_distance', 
-            'day_count': no_days,
-            'start_day': str(df_pred.date.iloc[0].date()),
-            'end_day': str(df_pred.date.iloc[-1].date()),
-            'prediction_type': 'one-step-ahead',
-            'error_provided': True,
-            'alpha': alpha,
-            'days': days
-        }
-    }
-
-# Define endpoint for delivery of time series prediction of commuter services 
-# with errors
-@app.get('/prediction/commuter_w_error/')
-async def prediction_commuter_w_error(alpha: float=0.95):
-    '''<p>Function responses with JSON format answer, containing dates and
-    values of 14-day prediction of time series "commuter". <br>Prediction 
-    is obtained by multistep-ahead-prediction (in contrast to
-    one-step-head-prediction). Errors are provided. </p><br>
-    Structure of JSON response:\n
-        {
-            'prediction': {
-                'name': <str> Name of time series, 
-                'day_count': <int> Number of days in prediction horizon,
-                'start_day': <str> Date of first predicted time step,
-                'end_day': <str> Date of last predicted time step,
-                'prediction_type': <str> Tells whether prediction is  
-                    "multistep-ahead" or "one-step-ahead" type,
-                'error_provided': <Bool> Tells whether prediction includes error
-                    margins,
-                'alpha': <float> Values 0 to 1, defines error margins
-                'days': (list with as many entry as predicted time steps) [
-                    {
-                        'date': <str> Date of predicted time step,
-                        'value': <float> Value of predicted time series at this
-                            time step
-                        'error_lower_limit' <float> Lower limit of error 
-                            interval, as to parameter alpha
-                        'error_upper_limit' <float> Upper limit of error 
-                            interval, as to parameter alpha
-                    }
-                ] 
-            }
-        }
-    '''
-    # Load trained model for this purpose
-    try:
-        model = load_tensorflow_model('rnn_commuter.keras', app_dir_parts)
-    except IOError as err:
-        # Print error to terminal
-        print(*err.args)
-        # Display error in response of API
-        return {'Error': err.args} 
-    # Load sql query to load time series up to newest date available
-    try:
-        sql_query = load_from_subdirectory(
-            'timeseries_query.txt', app_dir_parts
-        )
-    except IOError as err:
-        # Print error to terminal
-        print(*err.args) 
-        # Display error in response of API
-        return {'Error': err.args} 
-    # Load time series from database
-    try:
-        df = finrail_rnn_model.read_timeseries_from_database(engine=engine, 
-            str_query=sql_query)
-    except ProgrammingError as err:
-        print(*err.args) # Print error to terminal
-        return {'Error': err.args} # Display error in response of API
-    except:
-        # Print error to terminal
-        print('Could not load time series from database. Check database '
-            'server.')
-         # Display error in response of API
-        return {
-            'Error': 'Could not load time series from database. Check '
-            'database server.'
-        }
-    # Check, whether enough data is present to make predictions
-    if df.index.size < 21:
-        return {
-            'Error': 'Not enough time steps in database to start prediction. '
-            'Database must hold at least 21 time steps for reasonable '
-            'predictions'
-        }
-    # Use tweak-function to process DataFrame and add one-hot-encodings, keep 
-    # only last 21 days.
-    df = finrail_rnn_model.tweak_timeseries(df)
-    # Set up test data set, as it is needed to calculate residuals, which are 
-    # needed for bootstrapping
-    data_test = finrail_rnn_model.prepare_training_dataset(df, 
-        ['commuter', 'next_day_H', 'next_day_S', 'next_day_W'], (2942, None), 
-        batch_size=500, reshuffle_each_iteration=False, seq_length=21)
-    # Predict next 14 days of time series
-    df_pred = finrail_rnn_model.predict_with_errors(model, data_test, 
-        df[['date', 'commuter', 'next_day_H', 'next_day_S', 'next_day_W']],
-        bootstrap_size=100, alpha=alpha)
-    # Assembling response
-    days = [
-        {
-            'date': str(date.date()), 
-            'value': round(float(val), 2),
-            'error_lower_limit': round(float(lower_lim), 2),
-            'error_upper_limit': round(float(upper_lim), 2)
-        } 
-        for i, (date, val, lower_lim, upper_lim) 
-        in enumerate(zip(df_pred.date, df_pred.one_step_ahead, 
-        df_pred.iloc[:, 2], df_pred.iloc[:, 3]))
-    ]
-    no_days = len(df_pred.one_step_ahead)
-    return {
-        'prediction': {
-            'name': 'commuter', 
             'day_count': no_days,
             'start_day': str(df_pred.date.iloc[0].date()),
             'end_day': str(df_pred.date.iloc[-1].date()),
