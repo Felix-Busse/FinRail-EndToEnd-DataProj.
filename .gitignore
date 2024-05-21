@@ -1,7 +1,10 @@
-# ignore pycache folder
+# ignore pycache folder (and those in subdirectories)
 __pycache__/
-# ignore notebook chechpoints
+data_collect_app/__pycache__/
+prediction_rnn_app/__pycache__/
+# ignore notebook chechpoints (and those in subdirectories)
 .ipynb_checkpoints/
+data_collect_app/.ipynb_checkpoints/
 # ignore tensorboard logs
 tf_log/
 
