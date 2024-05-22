@@ -17,8 +17,8 @@ of the rail system. A recurrent **neuronal network** is trained on these to pred
 Details of data inspection, neuronal network training and analysis of results can be found in [Jupyter-Notebook](Training_RNN_model.ipynb).
 
 The application includes three containerized services. Check out **commented python code** of these for details:
-|name|purpose|
-|------|------|
+|Name|Purpose|Code link|
+|:------|:------|:------|
 |my_sql_database|Stores data [ER shema](ER_shema.png)|
 |data_collect_app|Downloads new data to database, if available|
 |prediction_rnn_app|Provides APIs with forecast of timeseries|
@@ -26,9 +26,9 @@ The application includes three containerized services. Check out **commented pyt
 Possible contributions may include further inspection of data in the database of "Finrail Timeseries Prediction", which includes more data than used by the app. Alternatively
 you can use data from other APIs, as up to now only train composition data is used, check out data source APIs [swagger page](https://rata.digitraffic.fi/swagger/). 
 
-You can contribute by 
+You can contribute:
  |Steps|
- |----------------------|
+ |:----------------------|
  |- Fork this repository|
  |- Clone your repository|
  |- Develop new containerized applications|
