@@ -1,4 +1,4 @@
-# Fin_Rail_analysis
+# FinRail
  Using open rail data of Finland. This repository aims to collect amazing applications based on rich open data from finnish rail.
 
 ## Applications
